@@ -13,7 +13,7 @@ public class ActivityMainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        //tvPlayer1Pit.findViewById(R.id.);
+        //tvPlayer1Pit.findViewById(R.id.tv);
 
     }
 }
