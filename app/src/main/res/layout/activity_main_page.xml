@@ -7,34 +7,179 @@
     tools:context=".ActivityMainPage">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="50dp"
+        android:id="@+id/tvPlayer2Pit"
+        android:layout_width="wrap_content"
         android:layout_height="match_constraints"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:text="TextView"
+        android:textAlignment="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvPlayer1Pit"
         android:layout_width="wrap_content"
         android:layout_height="match_constraints"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
+    <Button
         android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="74dp"
-        tools:layout_editor_absoluteY="36dp" />
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="6"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toEndOf="@+id/tvPlayer2Pit"
+        app:layout_constraintTop_toTopOf="@+id/tvPlayer2Pit" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="295dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvPlayer1Pit"
+        app:layout_constraintStart_toEndOf="@+id/tvPlayer2Pit"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/textView4"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+        app:layout_constraintEnd_toStartOf="@+id/textView3"
+        app:layout_constraintStart_toEndOf="@+id/tvPlayer2Pit"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+    <Button
+        android:id="@+id/textView5"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="592dp"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/textView6"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toStartOf="@+id/tvPlayer1Pit"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/tvPlayer1Pit" />
+
+    <Button
+        android:id="@+id/textView7"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintEnd_toStartOf="@+id/textView6"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+    <Button
+        android:id="@+id/textView8"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView6"
+        app:layout_constraintEnd_toStartOf="@+id/tvPlayer1Pit"
+        app:layout_constraintStart_toEndOf="@+id/textView6"
+        app:layout_constraintTop_toTopOf="@+id/textView6" />
+
+    <Button
+        android:id="@+id/textView9"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPlayer2Pit"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toEndOf="@+id/tvPlayer2Pit"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <Button
+        android:id="@+id/textView10"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintEnd_toStartOf="@+id/textView9"
+        app:layout_constraintStart_toEndOf="@+id/tvPlayer2Pit"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/textView11"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView9"
+        app:layout_constraintEnd_toStartOf="@+id/divider"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toTopOf="@+id/textView9" />
+
+    <Button
+        android:id="@+id/textView12"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPlayer1Pit"
+        app:layout_constraintEnd_toStartOf="@+id/tvPlayer1Pit"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintEnd_toStartOf="@+id/textView12"
+        app:layout_constraintStart_toEndOf="@+id/divider"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
+
+    <Button
+        android:id="@+id/textView13"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:text="6"
+        app:layout_constraintBottom_toBottomOf="@+id/textView12"
+        app:layout_constraintEnd_toStartOf="@+id/tvPlayer1Pit"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toTopOf="@+id/textView12" />
 </android.support.constraint.ConstraintLayout>
