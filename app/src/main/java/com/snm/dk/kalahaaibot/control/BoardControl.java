@@ -49,21 +49,39 @@ public class BoardControl {
                 case 10: translatedPick = 4; break;
                 case 11: translatedPick = 5; break;
             }
-            updateScore(playerPick, true);
+            updateScore(translatedPick, true);
         }
 
         // Player2
         if (playerPick >= 0 && playerPick < 5) {
             updateScore(playerPick, false);
         }
-        this.player1Score.set(translatedPick,playerPick);
     }
 
     private void updateScore(int playerPick, boolean player) {
+        int tempAMBO;
+
+        // Player1
         if (player) {
-            
+            tempAMBO = this.player1Score.get(playerPick);
+            for (int i = playerPick; i < this.player1Score.size(); i++) {
+                this.player1Score.set(i, 1+this.player1Score.get(i));
+                if (tempAMBO == 0) {break;}
+                tempAMBO--;
+            }
+
+            if (tempAMBO > 0) {
+                for (int i = this.player2Score.size(); i > 0 ; i--) {
+
+                    tempAMBO--;
+
+                }
+            }
+
+            this.player1Score.set(playerPick, 0);
         }
 
+        // Player2
         if (!player) {
 
         }
