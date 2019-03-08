@@ -5,26 +5,19 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BoardControl {
 
-    private final int ROW_LENGTH = 6;
+    private final int ROW_LENGTH = 12;
     private final int BALLS_PER_AMBO = 6;
 
-    private List<Integer> player1Score;
-    private List<Integer> player2Score;
+    private List<Integer> playerAMBO;
     private List<Integer> playerScores;
 
     public BoardControl() {
-        this.player1Score = new ArrayList<>();
-        for (int i = 0; i < this.ROW_LENGTH; i++) { this.player1Score.add(BALLS_PER_AMBO); }
-
-        this.player2Score = new ArrayList<>();
-        for (int i = 0; i < this.ROW_LENGTH; i++) { this.player2Score.add(BALLS_PER_AMBO); }
-
-        this.player1Score.addAll(this.player2Score);
+        this.playerAMBO = new ArrayList<>();
+        for (int i = 0; i < this.ROW_LENGTH; i++) { this.playerAMBO.add(BALLS_PER_AMBO); }
 
         this.playerScores = new ArrayList<>();
         this.playerScores.add(0);
@@ -33,14 +26,12 @@ public class BoardControl {
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).setText(this.player1Score.get(i).toString());
+            buttons.get(i).setText(this.playerAMBO.get(i).toString());
         }
         // Player1
         textViews.get(0).setText(this.playerScores.get(0).toString());
         // Player2
         textViews.get(1).setText(this.playerScores.get(1).toString());
-
-        Log.e("HELLO", this.player1Score.toString());
     }
 
     public void moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player) {
@@ -49,16 +40,16 @@ public class BoardControl {
         tempAMBO = AMBO;
 
         if (!iteration) {
-            tempAMBO = this.player1Score.get(playerPick);
+            tempAMBO = this.playerAMBO.get(playerPick);
             iterationInt = 1;
-            this.player1Score.set(playerPick, 0);
+            this.playerAMBO.set(playerPick, 0);
         }
 
         if (playerPick >= 6 && playerPick <= 13) {
             if (tempAMBO > 0) {
-                for (int i = playerPick+iterationInt; i < this.player1Score.size(); i++) {
+                for (int i = playerPick+iterationInt; i < this.playerAMBO.size(); i++) {
                     if (tempAMBO == 0) {break;}
-                    this.player1Score.set(i, 1 + this.player1Score.get(i));
+                    this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
                     tempAMBO--;
                 }
                 // Recursive if anything is left in tempAMBO
@@ -76,7 +67,7 @@ public class BoardControl {
             if (tempAMBO > 0) {
                 for (int i = playerPick-iterationInt; i >= 0; i--) {
                     if (tempAMBO == 0) {break;}
-                    this.player1Score.set(i, 1 + this.player1Score.get(i));
+                    this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
                     tempAMBO--;
                 }
 
