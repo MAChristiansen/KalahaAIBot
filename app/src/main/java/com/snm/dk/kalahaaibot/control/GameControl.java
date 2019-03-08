@@ -26,7 +26,6 @@ public class GameControl {
             boardControl.moveAMBO(playerPick, false, 0, this.player);
             this.player = true;
         }
-
         return this;
     }
 

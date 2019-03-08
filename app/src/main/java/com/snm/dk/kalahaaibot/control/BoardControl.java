@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ public class BoardControl {
             this.playerAMBO.set(playerPick, 0);
         }
 
+        // Player1 + recursive
         if (playerPick >= 6 && playerPick <= 13) {
             if (tempAMBO > 0) {
                 for (int i = playerPick+iterationInt; i < this.playerAMBO.size(); i++) {
@@ -63,6 +63,7 @@ public class BoardControl {
             }
         }
 
+        // Player2 + recursive
         if (playerPick >= 0 && playerPick <= 5) {
             if (tempAMBO > 0) {
                 for (int i = playerPick-iterationInt; i >= 0; i--) {
