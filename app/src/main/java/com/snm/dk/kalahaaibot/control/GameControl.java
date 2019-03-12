@@ -30,7 +30,7 @@ public class GameControl {
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
-        if (this.player) textViews.get(2).setText("Player 1 turn"); else textViews.get(2).setText("Player 2 turn");
+        if (this.player) textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount()); else textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
         boardControl.updateBoard(buttons, textViews);
     }
 
