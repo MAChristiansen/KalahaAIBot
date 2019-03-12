@@ -1,5 +1,6 @@
 package com.snm.dk.kalahaaibot.control;
 
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ public class BoardControl {
     private final int ROW_LENGTH = 12;
     private final int BALLS_PER_AMBO = 6;
 
+    private final String TAG = "Test";
     private List<Integer> playerAMBO;
     private List<Integer> playerScores;
 
@@ -34,6 +36,7 @@ public class BoardControl {
     }
 
     public void moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player) {
+        int i = 0;
         int tempAMBO;
         int iterationInt = 0;
         tempAMBO = AMBO;
@@ -47,11 +50,21 @@ public class BoardControl {
         // Player1 + recursive
         if (playerPick >= 6 && playerPick <= 13) {
             if (tempAMBO > 0) {
-                for (int i = playerPick+iterationInt; i < this.playerAMBO.size(); i++) {
+                for (i = playerPick+iterationInt; i < this.playerAMBO.size(); i++) {
                     if (tempAMBO == 0) {break;}
                     this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
                     tempAMBO--;
                 }
+                i--;
+
+                Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
+                if (tempAMBO == 0 && playerAMBO.get(i) == 1) {
+                    playerScores.set(0, playerAMBO.get(i) + playerScores.get(0) + playerAMBO.get(i-6));
+                    playerAMBO.set(i, 0);
+                    playerAMBO.set(i-6, 0);
+                    return;
+                }
+
                 // Recursive if anything is left in tempAMBO
                 if (tempAMBO > 0) {
                     if (player) {
@@ -66,12 +79,22 @@ public class BoardControl {
         // Player2 + recursive
         if (playerPick >= 0 && playerPick <= 5) {
             if (tempAMBO > 0) {
-                for (int i = playerPick-iterationInt; i >= 0; i--) {
+                for (i = playerPick-iterationInt; i >= 0; i--) {
                     if (tempAMBO == 0) {break;}
                     this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
                     tempAMBO--;
                 }
+                i++;
 
+                Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
+                if (tempAMBO == 0 && playerAMBO.get(i) == 1) {
+                    playerScores.set(1, playerAMBO.get(i) + playerScores.get(1) + playerAMBO.get(i+6));
+                    playerAMBO.set(i, 0);
+                    playerAMBO.set(i+6, 0);
+                    return;
+                }
+
+                // Recursive if anything is left in tempAMBO
                 if (tempAMBO > 0) {
                     if (!player) {
                         this.playerScores.set(1, 1+this.playerScores.get(1));
@@ -83,5 +106,22 @@ public class BoardControl {
         }
 
     }
+
+    public int getCount() {
+        int count = 0;
+
+        Log.i(TAG, playerAMBO.toString());
+
+        for (int i : playerAMBO) {
+            count += i;
+
+        }
+
+
+            count += playerScores.get(0);
+            count += playerScores.get(1);
+
+            return count;
+        }
 
 }
