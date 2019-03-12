@@ -18,13 +18,11 @@ public class GameControl {
     public GameControl takeTurn(int playerPick) {
         // Player1
         if (this.player && playerPick > 5) {
-            boardControl.moveAMBO(playerPick, false, 0, this.player);
-            this.player = false;
+            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            boardControl.moveAMBO(playerPick, false, 0, this.player);
-            this.player = true;
+            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
         }
         return this;
     }
