@@ -18,20 +18,19 @@ public class GameControl {
     public GameControl takeTurn(int playerPick) {
         // Player1
         if (this.player && playerPick > 5) {
-            boardControl.moveAMBO(playerPick, 0);
+            boardControl.moveAMBO(playerPick, false, 0, this.player);
             this.player = false;
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            boardControl.moveAMBO(playerPick, 0);
+            boardControl.moveAMBO(playerPick, false, 0, this.player);
             this.player = true;
         }
         return this;
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
-        // TODO: Remove boardcontrol.getcount(); later
-        if (this.player) textViews.get(2).setText("Player 1 turn" + " " + boardControl.getCount()); else textViews.get(2).setText("Player 2 turn" + " " + boardControl.getCount());
+        if (this.player) textViews.get(2).setText("Player 1 turn"); else textViews.get(2).setText("Player 2 turn");
         boardControl.updateBoard(buttons, textViews);
     }
 
