@@ -30,13 +30,35 @@ public class GameControl {
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
-        Log.i(TAG, "updateBoard: " + this.player);
-        if (this.player) textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount()); else textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
         boardControl.updateBoard(buttons, textViews);
+
+        if (isGameDone(boardControl.getPlayerAMBO())) {
+            Log.i(TAG, "updateBoard: is DONE!!!");
+        }
+        if (this.player) textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount()); else textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
     }
 
-    private boolean isGameDone() {
-        return true;
+    private boolean isGameDone(List<Integer> board) {
+
+        Integer player1AmboScore = 0;
+        Integer player2AmboScore = 0;
+
+        //calculate player 1 ambo score
+        for (int i = board.size() / 2; i < board.size(); i++) {
+            player1AmboScore += board.get(i);
+        }
+
+        //calculate player 2 ambo score
+        for (int i = 0; i < (board.size() / 2); i++) {
+            player2AmboScore += board.get(i);
+        }
+
+        Log.i(TAG, "isGameDone: player1Score: " + player1AmboScore + " Player2Score: " + player2AmboScore);
+
+        if (player1AmboScore == 0 || player2AmboScore == 0 ) {
+            return true;
+        }
+        return false;
     }
 
 }
