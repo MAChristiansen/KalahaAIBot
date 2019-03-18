@@ -10,7 +10,7 @@ import java.util.List;
 public class BoardControl {
 
     private final int ROW_LENGTH = 12;
-    private final int BALLS_PER_AMBO = 6;
+    private final int BALLS_PER_AMBO = 1;
 
     private final String TAG = "BoardControl";
     private List<Integer> playerAMBO;
@@ -131,5 +131,9 @@ public class BoardControl {
             count += playerScores.get(0);
             count += playerScores.get(1);
             return count;
+    }
+
+    public List<Integer> getPlayerAMBO() {
+        return playerAMBO;
     }
 }
