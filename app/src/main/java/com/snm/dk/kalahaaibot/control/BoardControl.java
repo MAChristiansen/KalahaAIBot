@@ -12,7 +12,7 @@ public class BoardControl {
     private final int ROW_LENGTH = 12;
     private final int BALLS_PER_AMBO = 6;
 
-    private final String TAG = "Test";
+    private final String TAG = "BoardControl";
     private List<Integer> playerAMBO;
     private List<Integer> playerScores;
 
@@ -35,7 +35,7 @@ public class BoardControl {
         textViews.get(1).setText(this.playerScores.get(1).toString());
     }
 
-    public void moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player) {
+    public boolean moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player) {
         int i = 0;
         int tempAMBO;
         int iterationInt = 0;
@@ -58,16 +58,22 @@ public class BoardControl {
                 i--;
 
                 Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
-                if (tempAMBO == 0 && playerAMBO.get(i) == 1) {
+                // If player1 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
+                if (player && tempAMBO == 0 && playerAMBO.get(i) == 1) {
                     playerScores.set(0, playerAMBO.get(i) + playerScores.get(0) + playerAMBO.get(i-6));
                     playerAMBO.set(i, 0);
                     playerAMBO.set(i-6, 0);
-                    return;
+                    return false;
                 }
 
                 // Recursive if anything is left in tempAMBO
                 if (tempAMBO > 0) {
                     if (player) {
+                        // If player1 put the last ball in his pit -> extra turn
+                        if (tempAMBO == 1) {
+                            this.playerScores.set(0, 1 + this.playerScores.get(0));
+                            return true;
+                        }
                         this.playerScores.set(0, 1 + this.playerScores.get(0));
                         tempAMBO--;
                     }
@@ -87,16 +93,22 @@ public class BoardControl {
                 i++;
 
                 Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
-                if (tempAMBO == 0 && playerAMBO.get(i) == 1) {
+                // If player2 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
+                if (!player && tempAMBO == 0 && playerAMBO.get(i) == 1) {
                     playerScores.set(1, playerAMBO.get(i) + playerScores.get(1) + playerAMBO.get(i+6));
                     playerAMBO.set(i, 0);
                     playerAMBO.set(i+6, 0);
-                    return;
+                    return true;
                 }
 
                 // Recursive if anything is left in tempAMBO
                 if (tempAMBO > 0) {
                     if (!player) {
+                        // If player1 put the last ball in his pit -> extra turn
+                        if (tempAMBO == 1) {
+                            this.playerScores.set(1, 1+this.playerScores.get(1));
+                            return false;
+                        }
                         this.playerScores.set(1, 1+this.playerScores.get(1));
                         tempAMBO--;
                     }
@@ -105,23 +117,19 @@ public class BoardControl {
             }
         }
 
+        //Change player
+        if (player) {return  false;} else {return true;}
     }
 
     public int getCount() {
         int count = 0;
-
         Log.i(TAG, playerAMBO.toString());
-
         for (int i : playerAMBO) {
             count += i;
 
         }
-
-
             count += playerScores.get(0);
             count += playerScores.get(1);
-
             return count;
-        }
-
+    }
 }
