@@ -75,7 +75,8 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 Fragment newFragment = new FragmentResult();
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
 
-                State state = new State(
+                /*************TEST AF TRÆ*************/
+                /*State state = new State(
                         ControlReg.getBoardControl().getBoard(),
                         ControlReg.getBoardControl().getBoard().getPitScores().get(0) - ControlReg.getBoardControl().getBoard().getPitScores().get(1),
                         ControlReg.getGameControl().getCurrentPlayer());
@@ -93,12 +94,31 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                         -9,
                         ControlReg.getGameControl().getCurrentPlayer());
 
-                root.addChild(new Node(state2));
-                root.addChild(new Node(state3));
+                State state4 = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        10,
+                        ControlReg.getGameControl().getCurrentPlayer());
 
-                for (Node n : tree.getRoot().getChildren()) {
-                    Log.i(TAG, "onClick: " + n.getState().getUtility());
-                }
+                State state5 = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        -21,
+                        ControlReg.getGameControl().getCurrentPlayer());
+
+                State state6 = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        66,
+                        ControlReg.getGameControl().getCurrentPlayer());
+
+                Node node1 = new Node(state2);
+                Node node2 = new Node(state3);
+
+                root.addChild(node1);
+                root.addChild(node2);
+                node1.addChild(new Node(state4));
+                node1.addChild(new Node(state5));
+                node2.addChild(new Node(state6));
+
+                ControlReg.getAIControl().visitNode(root);*/
 
 
             }
