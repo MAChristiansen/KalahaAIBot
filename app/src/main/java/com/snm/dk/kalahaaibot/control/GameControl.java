@@ -24,7 +24,8 @@ public class GameControl {
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
+            //this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
+            ControlReg.getAIControl().calculateStates(ControlReg.getBoardControl().getCurrentBoard());
         }
         return this;
     }
@@ -32,8 +33,8 @@ public class GameControl {
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         boardControl.updateBoard(buttons, textViews);
 
-        if (isGameDone(boardControl.getBoard().getAmboScores())) {
-            if (whoWon(boardControl.getBoard().getPitScores())) {
+        if (isGameDone(boardControl.getCurrentBoard().getAmboScores())) {
+            if (whoWon(boardControl.getCurrentBoard().getPitScores())) {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
             } else {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
