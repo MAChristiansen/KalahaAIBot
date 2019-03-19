@@ -4,35 +4,40 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.snm.dk.kalahaaibot.model.Board;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardControl {
 
     private final int ROW_LENGTH = 12;
-    private final int BALLS_PER_AMBO = 1;
+    private final int BALLS_PER_AMBO = 6;
 
     private final String TAG = "BoardControl";
-    private List<Integer> playerAMBO;
-    private List<Integer> playerScores;
+    private Board board;
 
     public BoardControl() {
-        this.playerAMBO = new ArrayList<>();
-        for (int i = 0; i < this.ROW_LENGTH; i++) { this.playerAMBO.add(BALLS_PER_AMBO); }
+        // Init board
+        board = new Board();
+        for (int i = 0; i < this.ROW_LENGTH; i++) {
+            this.board.getAmboScores().add(BALLS_PER_AMBO);
+        }
 
-        this.playerScores = new ArrayList<>();
-        this.playerScores.add(0);
-        this.playerScores.add(0);
+        this.board.getPitScores().add(0);
+        this.board.getPitScores().add(0);
     }
+
+
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).setText(this.playerAMBO.get(i).toString());
+            buttons.get(i).setText(this.board.getAmboScores().get(i).toString());
         }
         // Player1
-        textViews.get(0).setText(this.playerScores.get(0).toString());
+        textViews.get(0).setText(this.board.getPitScores().get(0).toString());
         // Player2
-        textViews.get(1).setText(this.playerScores.get(1).toString());
+        textViews.get(1).setText(this.board.getPitScores().get(1).toString());
     }
 
     public List<String> updateAmbos() {
@@ -40,7 +45,7 @@ public class BoardControl {
         List<String> amboScores = new ArrayList<>();
 
         for (int i = 0; i < ROW_LENGTH; i++) {
-            amboScores.set(i, this.playerAMBO.get(i).toString());
+            amboScores.set(i, this.board.getAmboScores().get(i).toString());
         }
 
         return amboScores;
@@ -50,8 +55,8 @@ public class BoardControl {
 
         List<String> pitScores = new ArrayList<>();
 
-        pitScores.set(0, this.playerScores.get(0).toString());
-        pitScores.set(1, this.playerScores.get(1).toString());
+        pitScores.set(0, this.board.getPitScores().get(0).toString());
+        pitScores.set(1, this.board.getPitScores().get(1).toString());
 
         return pitScores;
     }
@@ -63,27 +68,27 @@ public class BoardControl {
         tempAMBO = AMBO;
 
         if (!iteration) {
-            tempAMBO = this.playerAMBO.get(playerPick);
+            tempAMBO = this.board.getAmboScores().get(playerPick);
             iterationInt = 1;
-            this.playerAMBO.set(playerPick, 0);
+            this.board.getAmboScores().set(playerPick, 0);
         }
 
         // Player1 + recursive
         if (playerPick >= 6 && playerPick <= 13) {
             if (tempAMBO > 0) {
-                for (i = playerPick+iterationInt; i < this.playerAMBO.size(); i++) {
+                for (i = playerPick+iterationInt; i < this.board.getAmboScores().size(); i++) {
                     if (tempAMBO == 0) {break;}
-                    this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
+                    this.board.getAmboScores().set(i, 1 + this.board.getAmboScores().get(i));
                     tempAMBO--;
                 }
                 i--;
 
                 Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player1 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
-                if (player && tempAMBO == 0 && playerAMBO.get(i) == 1) {
-                    playerScores.set(0, playerAMBO.get(i) + playerScores.get(0) + playerAMBO.get(i-6));
-                    playerAMBO.set(i, 0);
-                    playerAMBO.set(i-6, 0);
+                if (player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
+                    board.getPitScores().set(0, board.getAmboScores().get(i) + board.getPitScores().get(0) + board.getAmboScores().get(i-6));
+                    board.getAmboScores().set(i, 0);
+                    board.getAmboScores().set(i-6, 0);
                     return false;
                 }
 
@@ -92,10 +97,10 @@ public class BoardControl {
                     if (player) {
                         // If player1 put the last ball in his pit -> extra turn
                         if (tempAMBO == 1) {
-                            this.playerScores.set(0, 1 + this.playerScores.get(0));
+                            this.board.getPitScores().set(0, 1 + this.board.getPitScores().get(0));
                             return true;
                         }
-                        this.playerScores.set(0, 1 + this.playerScores.get(0));
+                        this.board.getPitScores().set(0, 1 + this.board.getPitScores().get(0));
                         tempAMBO--;
                     }
                     moveAMBO(5, true, tempAMBO, player);
@@ -108,17 +113,17 @@ public class BoardControl {
             if (tempAMBO > 0) {
                 for (i = playerPick-iterationInt; i >= 0; i--) {
                     if (tempAMBO == 0) {break;}
-                    this.playerAMBO.set(i, 1 + this.playerAMBO.get(i));
+                    this.board.getAmboScores().set(i, 1 + this.board.getAmboScores().get(i));
                     tempAMBO--;
                 }
                 i++;
 
                 Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player2 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
-                if (!player && tempAMBO == 0 && playerAMBO.get(i) == 1) {
-                    playerScores.set(1, playerAMBO.get(i) + playerScores.get(1) + playerAMBO.get(i+6));
-                    playerAMBO.set(i, 0);
-                    playerAMBO.set(i+6, 0);
+                if (!player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
+                    board.getPitScores().set(1, board.getAmboScores().get(i) + board.getPitScores().get(1) + board.getAmboScores().get(i+6));
+                    board.getAmboScores().set(i, 0);
+                    board.getAmboScores().set(i+6, 0);
                     return true;
                 }
 
@@ -127,10 +132,10 @@ public class BoardControl {
                     if (!player) {
                         // If player1 put the last ball in his pit -> extra turn
                         if (tempAMBO == 1) {
-                            this.playerScores.set(1, 1+this.playerScores.get(1));
+                            this.board.getPitScores().set(1, 1+this.board.getPitScores().get(1));
                             return false;
                         }
-                        this.playerScores.set(1, 1+this.playerScores.get(1));
+                        this.board.getPitScores().set(1, 1+this.board.getPitScores().get(1));
                         tempAMBO--;
                     }
                     moveAMBO(6, true, tempAMBO, player);
@@ -144,21 +149,17 @@ public class BoardControl {
 
     public int getCount() {
         int count = 0;
-        Log.i(TAG, playerAMBO.toString());
-        for (int i : playerAMBO) {
+        Log.i(TAG, board.getAmboScores().toString());
+        for (int i : board.getAmboScores()) {
             count += i;
 
         }
-            count += playerScores.get(0);
-            count += playerScores.get(1);
+            count += board.getPitScores().get(0);
+            count += board.getPitScores().get(1);
             return count;
     }
 
-    public List<Integer> getPlayerAMBO() {
-        return playerAMBO;
-    }
-
-    public List<Integer> getPlayerScores() {
-        return playerScores;
+    public Board getBoard() {
+        return board;
     }
 }
