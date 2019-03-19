@@ -59,7 +59,6 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
         // First Update to board.
         getGameControl().updateBoard(this.buttons, this.textViews);
-
     }
 
 
@@ -70,7 +69,6 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 View[] views = {layer, fragmentContainer};
                 Fragment newFragment = new FragmentResult();
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-                VisualControl.showDialog(this, newFragment, fragmentContainer.getId(), views);
             }
         }
     }

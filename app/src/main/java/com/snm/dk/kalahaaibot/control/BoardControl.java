@@ -35,6 +35,27 @@ public class BoardControl {
         textViews.get(1).setText(this.playerScores.get(1).toString());
     }
 
+    public List<String> updateAmbos() {
+
+        List<String> amboScores = new ArrayList<>();
+
+        for (int i = 0; i < ROW_LENGTH; i++) {
+            amboScores.set(i, this.playerAMBO.get(i).toString());
+        }
+
+        return amboScores;
+    }
+
+    public List<String> updatePits() {
+
+        List<String> pitScores = new ArrayList<>();
+
+        pitScores.set(0, this.playerScores.get(0).toString());
+        pitScores.set(1, this.playerScores.get(1).toString());
+
+        return pitScores;
+    }
+
     public boolean moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player) {
         int i = 0;
         int tempAMBO;
@@ -135,5 +156,9 @@ public class BoardControl {
 
     public List<Integer> getPlayerAMBO() {
         return playerAMBO;
+    }
+
+    public List<Integer> getPlayerScores() {
+        return playerScores;
     }
 }

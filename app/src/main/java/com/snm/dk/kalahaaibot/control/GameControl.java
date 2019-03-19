@@ -33,9 +33,19 @@ public class GameControl {
         boardControl.updateBoard(buttons, textViews);
 
         if (isGameDone(boardControl.getPlayerAMBO())) {
-            Log.i(TAG, "updateBoard: is DONE!!!");
+            if (whoWon(boardControl.getPlayerScores())) {
+                Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
+            } else {
+                Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
+            }
+
         }
-        if (this.player) textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount()); else textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
+        if (this.player) {
+            textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount());
+        }
+        else {
+            textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
+        }
     }
 
     private boolean isGameDone(List<Integer> board) {
@@ -56,6 +66,14 @@ public class GameControl {
         Log.i(TAG, "isGameDone: player1Score: " + player1AmboScore + " Player2Score: " + player2AmboScore);
 
         if (player1AmboScore == 0 || player2AmboScore == 0 ) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean whoWon(List<Integer> pits) {
+
+        if (pits.get(0) > pits.get(1)) {
             return true;
         }
         return false;
