@@ -27,7 +27,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     private FrameLayout layer, fragmentContainer;
 
     private final int[] BUTTON_IDS = {R.id.btnP2_1, R.id.btnP2_2, R.id.btnP2_3, R.id.btnP2_4, R.id.btnP2_5, R.id.btnP2_6,
-            R.id.btnP1_1, R.id.btnP1_2, R.id.btnP1_3, R.id.btnP1_4, R.id.btnP1_5, R.id.btnP1_6, };
+            R.id.btnP1_1, R.id.btnP1_2, R.id.btnP1_3, R.id.btnP1_4, R.id.btnP1_5, R.id.btnP1_6};
 
     private final int[] TEXTVIEW_IDS = {R.id.tvPlayer1Pit, R.id.tvPlayer2Pit, R.id.tvStatus};
 
@@ -67,7 +67,10 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         for (int i = 0; i < this.buttons.size(); i++) {
             if (this.buttons.get(i) == v) {
+                View[] views = {layer, fragmentContainer};
+                Fragment newFragment = new FragmentResult();
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
+                VisualControl.showDialog(this, newFragment, fragmentContainer.getId(), views);
             }
         }
     }
