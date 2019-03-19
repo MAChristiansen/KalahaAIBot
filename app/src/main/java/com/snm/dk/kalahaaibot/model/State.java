@@ -18,6 +18,11 @@ public class State {
         this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
     }
 
+    public State(Board board) {
+        this.board = board;
+        this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
+    }
+
     public Board getBoard() {
         return board;
     }
