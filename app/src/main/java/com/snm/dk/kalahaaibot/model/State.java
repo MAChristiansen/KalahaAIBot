@@ -1,7 +1,5 @@
 package com.snm.dk.kalahaaibot.model;
 
-import java.util.ArrayList;
-
 public class State {
 
     private Board board;
@@ -17,7 +15,7 @@ public class State {
     public State(Board board, boolean player) {
         this.board = board;
         this.player = player;
-        this.utility = 0;
+        this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
     }
 
     public Board getBoard() {
