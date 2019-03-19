@@ -4,6 +4,7 @@ public class ControlReg {
 
     private static GameControl gameControl;
     private static BoardControl boardControl;
+    private static AIControl AIControl;
 
     public static GameControl getGameControl() {
         if (gameControl == null) gameControl = new GameControl();
@@ -13,6 +14,11 @@ public class ControlReg {
     public static BoardControl getBoardControl() {
         if (boardControl == null) boardControl = new BoardControl();
         return boardControl;
+    }
+
+    public static AIControl getAIControl() {
+        if (AIControl == null) AIControl = new AIControl();
+        return AIControl;
     }
 
 }
