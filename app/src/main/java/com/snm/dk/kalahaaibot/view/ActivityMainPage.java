@@ -37,7 +37,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_main_page);
 
         layer = findViewById(R.id.layer);
-        fragmentContainer = findViewById(R.id.FragmentContainer);
+        fragmentContainer = findViewById(R.id.fragmentContainer);
 
         int k = 0;
         // Building Button Array
