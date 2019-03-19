@@ -71,41 +71,44 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         for (int i = 0; i < this.buttons.size(); i++) {
             if (this.buttons.get(i) == v) {
-                View[] views = {layer, fragmentContainer};
-                Fragment newFragment = new FragmentResult();
+               /* View[] views = {layer, fragmentContainer};
+                Fragment newFragment = new FragmentResult();*/
+
+               ControlReg.getAIControl().calculateStates(ControlReg.getBoardControl().getCurrentBoard());
+
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
 
-                /*************TEST AF TRÆ*************/
+                /************* TEST AF TRÆ *************/
                 /*State state = new State(
-                        ControlReg.getBoardControl().getBoard(),
-                        ControlReg.getBoardControl().getBoard().getPitScores().get(0) - ControlReg.getBoardControl().getBoard().getPitScores().get(1),
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(0) - ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(1),
                         ControlReg.getGameControl().getCurrentPlayer());
                 Node root = new Node(state);
                 Tree tree = new Tree(root);
 
 
                 State state2 = new State(
-                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard(),
                         7,
                         ControlReg.getGameControl().getCurrentPlayer());
 
                 State state3 = new State(
-                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard(),
                         -9,
                         ControlReg.getGameControl().getCurrentPlayer());
 
                 State state4 = new State(
-                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard(),
                         10,
                         ControlReg.getGameControl().getCurrentPlayer());
 
                 State state5 = new State(
-                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard(),
                         -21,
                         ControlReg.getGameControl().getCurrentPlayer());
 
                 State state6 = new State(
-                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getCurrentBoard(),
                         66,
                         ControlReg.getGameControl().getCurrentPlayer());
 
