@@ -13,7 +13,7 @@ public class GameControl {
     private boolean player;
 
     public GameControl() {
-        boardControl = new BoardControl();
+        boardControl = ControlReg.getBoardControl();
         this.player = true;
     }
 
@@ -32,8 +32,8 @@ public class GameControl {
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         boardControl.updateBoard(buttons, textViews);
 
-        if (isGameDone(boardControl.getPlayerAMBO())) {
-            if (whoWon(boardControl.getPlayerScores())) {
+        if (isGameDone(boardControl.getBoard().getAmboScores())) {
+            if (whoWon(boardControl.getBoard().getPitScores())) {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
             } else {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
@@ -79,4 +79,7 @@ public class GameControl {
         return false;
     }
 
+    public boolean getCurrentPlayer() {
+        return player;
+    }
 }
