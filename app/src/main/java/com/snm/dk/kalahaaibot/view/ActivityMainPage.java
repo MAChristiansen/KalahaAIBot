@@ -14,6 +14,9 @@ import com.snm.dk.kalahaaibot.control.BoardControl;
 import com.snm.dk.kalahaaibot.control.ControlReg;
 import com.snm.dk.kalahaaibot.control.GameControl;
 import com.snm.dk.kalahaaibot.control.VisualControl;
+import com.snm.dk.kalahaaibot.model.Node;
+import com.snm.dk.kalahaaibot.model.State;
+import com.snm.dk.kalahaaibot.model.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,8 @@ import java.util.List;
 import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class ActivityMainPage extends AppCompatActivity implements View.OnClickListener {
+
+    private final String TAG = "Activity";
 
     private List<Button> buttons;
     private List<TextView> textViews;
@@ -69,6 +74,33 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 View[] views = {layer, fragmentContainer};
                 Fragment newFragment = new FragmentResult();
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
+
+                State state = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        ControlReg.getBoardControl().getBoard().getPitScores().get(0) - ControlReg.getBoardControl().getBoard().getPitScores().get(1),
+                        ControlReg.getGameControl().getCurrentPlayer());
+                Node root = new Node(state);
+                Tree tree = new Tree(root);
+
+
+                State state2 = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        7,
+                        ControlReg.getGameControl().getCurrentPlayer());
+
+                State state3 = new State(
+                        ControlReg.getBoardControl().getBoard(),
+                        -9,
+                        ControlReg.getGameControl().getCurrentPlayer());
+
+                root.addChild(new Node(state2));
+                root.addChild(new Node(state3));
+
+                for (Node n : tree.getRoot().getChildren()) {
+                    Log.i(TAG, "onClick: " + n.getState().getUtility());
+                }
+
+
             }
         }
     }
