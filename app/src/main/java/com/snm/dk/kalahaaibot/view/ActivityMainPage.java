@@ -25,7 +25,7 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class ActivityMainPage extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = "Activity";
+    private final String TAG = "GameMode";
 
     private List<Button> buttons;
     private List<TextView> textViews;
@@ -79,49 +79,100 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
 
                 /************* TEST AF TRÆ *************/
-                /*State state = new State(
+                State state = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(0) - ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(1),
                         ControlReg.getGameControl().getCurrentPlayer());
                 Node root = new Node(state);
                 Tree tree = new Tree(root);
 
+                boolean MAX = false;
+                boolean MIN = true;
+
 
                 State state2 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         7,
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        MAX);
 
                 State state3 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         -9,
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        MAX);
 
                 State state4 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         10,
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        MIN);
 
                 State state5 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         -21,
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        MAX);
 
                 State state6 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
-                        66,
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        11,
+                        MIN);
 
-                Node node1 = new Node(state2);
-                Node node2 = new Node(state3);
+                State state7 = new State(
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        80,
+                       MAX);
 
-                root.addChild(node1);
-                root.addChild(node2);
-                node1.addChild(new Node(state4));
-                node1.addChild(new Node(state5));
-                node2.addChild(new Node(state6));
+                State state8 = new State(
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        -23,
+                        MIN);
 
-                ControlReg.getAIControl().visitNode(root);*/
+                State state9 = new State(
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        22,
+                        MAX);
+
+                State state10 = new State(
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        2,
+                        MAX);
+
+                State state11 = new State(
+                        ControlReg.getBoardControl().getCurrentBoard(),
+                        5,
+                        MAX);
+
+                Node node7 = new Node(state2);
+                Node nodeM9 = new Node(state3);
+                Node node10 = new Node(state4);
+                Node nodeM21 = new Node(state5);
+                Node node11 = new Node(state6);
+                Node node80 = new Node(state7);
+                Node nodeM23 = new Node(state8);
+                Node node22 = new Node(state9);
+                Node node2 = new Node(state10);
+                Node node5 = new Node(state11);
+
+
+                root.addChild(node7);
+                root.addChild(nodeM9);
+
+                node7.addChild(node10);
+                node7.addChild(nodeM23);
+
+                nodeM9.addChild(node11);
+
+                node10.addChild(node80);
+                node10.addChild(nodeM21);
+
+                nodeM23.addChild(node22);
+                nodeM23.addChild(node2);
+
+                node11.addChild(node5);
+
+                ControlReg.getAIControl().visitNode(tree.getRoot());
+
+                Node optimal = ControlReg.getAIControl().getOptimalMove(tree);
+
+                Log.i(TAG, "Optimal Move: " + optimal.getState().getUtility());
 
 
             }

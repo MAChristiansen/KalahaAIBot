@@ -14,7 +14,7 @@ public class AIControl {
 
     public void visitNode(Node node) {
 
-        Log.i(TAG, "visitNode: Utility = " + node.getState().getUtility());
+        //Log.i(TAG, "visitNode: Utility = " + node.getState().getUtility());
 
         if (!(node.getChildren().isEmpty())) {
             for (Node n : node.getChildren()) {
@@ -23,8 +23,54 @@ public class AIControl {
         }
         else {
             //The node is a Leaf!
-            Log.i(TAG, "visitNode = LEAF! ");
+            //Log.i(TAG, "visitNode = LEAF! ");
+            visitParent(node);
         }
+    }
+
+    public void visitParent(Node node) {
+
+        if (node.getParent().getParent() != null) {
+            Node parent = node.getParent();
+
+            Integer bestUtilityMove = null;
+
+            Log.i(TAG, "Node Utility " + node.getState().getUtility());
+            //If the player is a MAX player
+            if (!node.getState().isPlayer()) {
+                for (Node n : parent.getChildren()) {
+                    if (bestUtilityMove == null || n.getState().getUtility() > bestUtilityMove) {
+                        bestUtilityMove = n.getState().getUtility();
+                    }
+                }
+                parent.getState().setUtility(parent.getParent().getState().getUtility() + bestUtilityMove);
+            }
+            // If the player is a MIN player
+            else {
+                for (Node n : parent.getChildren()) {
+                    if (bestUtilityMove == null || n.getState().getUtility() < bestUtilityMove) {
+                        bestUtilityMove = n.getState().getUtility();
+                    }
+                }
+                parent.getState().setUtility(parent.getParent().getState().getUtility() + bestUtilityMove);
+            }
+
+            visitParent(parent);
+        } else {
+            Log.i(TAG, "visitParent: Im in top level");
+        }
+    }
+
+    public Node getOptimalMove(Tree tree) {
+        Node optimal = null;
+
+        for (Node n : tree.getRoot().getChildren()) {
+            if (optimal == null || n.getState().getUtility() > optimal.getState().getUtility()) {
+                optimal = n;
+            }
+        }
+
+        return optimal;
     }
 
     public void calculateStates(Board board) {
