@@ -1,9 +1,13 @@
 package com.snm.dk.kalahaaibot.model;
 
+import java.sql.Array;
+import java.util.ArrayList;
+
 public class State {
 
     private Board board;
     private Integer utility;
+    private Integer heuristic = null;
     private boolean player;
 
     public State(Board board, Integer utility, boolean player) {
@@ -45,5 +49,13 @@ public class State {
 
     public void setPlayer(boolean player) {
         this.player = player;
+    }
+
+    public Integer getHeuristic() {
+        return heuristic;
+    }
+
+    public void setHeuristic(Integer heuristic) {
+        this.heuristic = heuristic;
     }
 }
