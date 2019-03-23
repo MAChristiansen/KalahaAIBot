@@ -24,40 +24,34 @@ public class AIControl {
         else {
             //The node is a Leaf!
             //Log.i(TAG, "visitNode = LEAF! ");
+            node.getState().setHeuristic(node.getState().getUtility());
             visitParent(node);
         }
     }
 
     public void visitParent(Node node) {
 
+        //Are we in the top layer?
         if (node.getParent().getParent() != null) {
+
+            //generate parent from node
             Node parent = node.getParent();
 
-            Integer bestUtilityMove = null;
+            //Log.i(TAG, "Node Utility " + node.getState().getUtility() + " Node parent: " + parent.getState().getUtility());
 
-            Log.i(TAG, "Node Utility " + node.getState().getUtility());
-            //If the player is a MAX player
-            if (!node.getState().isPlayer()) {
-                for (Node n : parent.getChildren()) {
-                    if (bestUtilityMove == null || n.getState().getUtility() > bestUtilityMove) {
-                        bestUtilityMove = n.getState().getUtility();
-                    }
+            if (parent.getState().isPlayer()) {
+                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) < parent.getState().getHeuristic()) {
+                    //Log.i(TAG, "Im setting node  " + parent.getState().getUtility() + " from H " + parent.getState().getHeuristic() + " to " + (node.getState().getHeuristic() + parent.getState().getUtility()));
+                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
                 }
-                parent.getState().setUtility(parent.getParent().getState().getUtility() + bestUtilityMove);
             }
-            // If the player is a MIN player
             else {
-                for (Node n : parent.getChildren()) {
-                    if (bestUtilityMove == null || n.getState().getUtility() < bestUtilityMove) {
-                        bestUtilityMove = n.getState().getUtility();
-                    }
+                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) > parent.getState().getHeuristic()) {
+                    //Log.i(TAG, "Im setting node  " + parent.getState().getUtility() + " from H " + parent.getState().getHeuristic() + " to " + (node.getState().getHeuristic() + parent.getState().getUtility()));
+                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
                 }
-                parent.getState().setUtility(parent.getParent().getState().getUtility() + bestUtilityMove);
             }
-
-            visitParent(parent);
-        } else {
-            Log.i(TAG, "visitParent: Im in top level");
+            visitParent(node.getParent());
         }
     }
 
@@ -65,9 +59,11 @@ public class AIControl {
         Node optimal = null;
 
         for (Node n : tree.getRoot().getChildren()) {
-            if (optimal == null || n.getState().getUtility() > optimal.getState().getUtility()) {
+            if (optimal == null || n.getState().getHeuristic() < optimal.getState().getHeuristic()) {
+                //Log.i(TAG, "getOptimalMove: " + n.getState().getHeuristic());
                 optimal = n;
             }
+
         }
 
         return optimal;
