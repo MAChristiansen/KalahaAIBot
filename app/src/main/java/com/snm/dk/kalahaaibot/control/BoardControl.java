@@ -162,4 +162,6 @@ public class BoardControl {
     public Board getCurrentBoard() {
         return currentBoard;
     }
+
+    public void setCurrentBoard(Board board) {this.currentBoard = board;}
 }
