@@ -18,18 +18,20 @@ public class Board {
         this.pitScores = new ArrayList<>();
     }
 
+    public Board(Board board) {
+        this.amboScores = board.getAmboScores();
+        this.pitScores = board.getPitScores();
+    }
+
     public List<Integer> getAmboScores() {
         return amboScores;
     }
-
     public void setAmboScores(List<Integer> amboScores) {
         this.amboScores = amboScores;
     }
-
     public List<Integer> getPitScores() {
         return pitScores;
     }
-
     public void setPitScores(List<Integer> pitScores) {
         this.pitScores = pitScores;
     }
@@ -48,4 +50,11 @@ public class Board {
         // TODO: find a solution to player turn
         return new State(gameState, false);
     }*/
+
+    @Override
+    public String toString() {
+        return "\n Board AMBO: " + this.amboScores + "\n" +
+                "Player Pit: " + this.pitScores;
+    }
+
 }
