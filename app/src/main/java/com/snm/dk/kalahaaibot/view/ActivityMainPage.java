@@ -1,22 +1,15 @@
 package com.snm.dk.kalahaaibot.view;
 
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.R;
-import com.snm.dk.kalahaaibot.control.BoardControl;
 import com.snm.dk.kalahaaibot.control.ControlReg;
-import com.snm.dk.kalahaaibot.control.GameControl;
-import com.snm.dk.kalahaaibot.control.VisualControl;
-import com.snm.dk.kalahaaibot.model.Node;
-import com.snm.dk.kalahaaibot.model.State;
-import com.snm.dk.kalahaaibot.model.Tree;
+import com.snm.dk.kalahaaibot.control.TestClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +59,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         getGameControl().updateBoard(this.buttons, this.textViews);
     }
 
+    private TestClass test = new TestClass();
 
     @Override
     public void onClick(View v) {
@@ -74,9 +68,11 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                /* View[] views = {layer, fragmentContainer};
                 Fragment newFragment = new FragmentResult();*/
 
-               ControlReg.getAIControl().calculateStates(ControlReg.getBoardControl().getCurrentBoard());
+               //test.testForLoop();
 
-                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
+               ControlReg.getAIControl().calculateStates();
+
+               getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
 
                 /************* TEST AF TRÆ *************/
                 /*State state = new State(
