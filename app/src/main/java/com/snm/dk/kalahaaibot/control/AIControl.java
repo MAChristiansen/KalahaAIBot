@@ -7,6 +7,11 @@ import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
 import com.snm.dk.kalahaaibot.model.Tree;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.snm.dk.kalahaaibot.control.ControlReg.getBoardControl;
+
 public class AIControl {
 
     private final String TAG = "AIControl";
@@ -26,20 +31,56 @@ public class AIControl {
             Log.i(TAG, "visitNode = LEAF! ");
         }
     }
+    private State rootState;
+    private Node root;
+    private Tree tree;
+    private boolean iteration;
 
-    public void calculateStates(Board board) {
+    private List<State> states;
+    private List<Node> nodes;
 
-        State rootState = new State(board);
-        Node root = new Node(rootState);
-        Tree tree = new Tree(root);
+    private Board lastBoard = new Board();
+
+    public Tree calculateStates() {
+        if (!iteration) {
+
+            this.lastBoard = new Board(getBoardControl().getCurrentBoard());
+            this.rootState = new State(this.lastBoard);
+            this.root = new Node(rootState);
+            this.tree = new Tree(root);
+            this.states = new ArrayList<>();
+        }
 
         //herfra skal vi findes alle børn til root. Og derefter børnene til børnene osv.
 
         //visitNode(root);
-        for (int i = 0; i< depth; i++) {
-            //laver sit shiiit!
+
+        for (int i = 0; i <= 5; i++) {
+            List<Integer> AMBOs = new ArrayList<>();
+            for (Integer ints : getBoardControl().getCurrentBoard().getAmboScores())
+                AMBOs.add(ints);
+
+            List<Integer> PITs = new ArrayList<>();
+            for (Integer ints : getBoardControl().getCurrentBoard().getPitScores())
+                PITs.add(ints);
+
+            this.states.add(new State(new Board(getBoardControl().getCurrentBoard()), getBoardControl().moveAMBO(i,false, 0, false)));
+
+            Log.i(TAG, "SET BOARD: " + this.lastBoard.toString());
+            getBoardControl().setCurrentBoard(new Board(AMBOs, PITs));
         }
 
+        for (int i = 0; i < this.states.size(); i++) {
+            this.nodes.add(new Node(this.states.get(i)));
+        }
+
+        for (int i = 0; i < this.nodes.size(); i++) {
+            this.root.addChild(this.nodes.get(i));
+        }
+
+        Log.i(TAG, this.tree.toString());
+
+        return this.tree;
 
     }
 
