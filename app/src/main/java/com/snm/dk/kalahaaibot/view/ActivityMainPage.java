@@ -70,9 +70,8 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
                //test.testForLoop();
 
-               ControlReg.getAIControl().calculateStates();
-
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
+                ControlReg.getAIControl().calculateStates();
 
                 /************* TEST AF TRÆ *************/
                 /*State state = new State(
