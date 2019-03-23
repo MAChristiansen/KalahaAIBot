@@ -24,8 +24,7 @@ public class GameControl {
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            //this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
-            ControlReg.getAIControl().calculateStates(ControlReg.getBoardControl().getCurrentBoard());
+            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
         }
         return this;
     }
