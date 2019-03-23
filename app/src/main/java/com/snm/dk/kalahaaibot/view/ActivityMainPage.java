@@ -79,15 +79,17 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
 
                 /************* TEST AF TRÆ *************/
+                boolean MAX = true;
+                boolean MIN = false;
+
                 State state = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(0) - ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(1),
-                        ControlReg.getGameControl().getCurrentPlayer());
+                        MAX);
                 Node root = new Node(state);
                 Tree tree = new Tree(root);
 
-                boolean MAX = false;
-                boolean MIN = true;
+
 
 
                 State state2 = new State(
@@ -103,7 +105,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 State state4 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         10,
-                        MIN);
+                        MAX);
 
                 State state5 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
@@ -123,7 +125,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 State state8 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
                         -23,
-                        MIN);
+                        MAX);
 
                 State state9 = new State(
                         ControlReg.getBoardControl().getCurrentBoard(),
@@ -172,7 +174,8 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
                 Node optimal = ControlReg.getAIControl().getOptimalMove(tree);
 
-                Log.i(TAG, "Optimal Move: " + optimal.getState().getUtility());
+                //Lige nu finder vi den mindste (MIN players tur)
+                Log.i(TAG, "Optimal Move: " + optimal.getState().getHeuristic());
 
 
             }
