@@ -46,4 +46,9 @@ public class State {
     public void setPlayer(boolean player) {
         this.player = player;
     }
+
+    @Override
+    public String toString() {
+        return this.board.toString();
+    }
 }
