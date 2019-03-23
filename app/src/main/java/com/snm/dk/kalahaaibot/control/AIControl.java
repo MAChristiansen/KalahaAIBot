@@ -32,18 +32,19 @@ public class AIControl {
         }
     }
 
-
+    private State rootState;
+    private Node root;
+    private Tree tree;
     private boolean iteration = false;
 
     private List<Node> nodes;
 
     private Board lastBoard = new Board();
 
-    public Tree calculateStates(Node root) {
-
-        Tree tree = new Tree(root);
+    public Tree calculateStates() {
 
         if (!iteration) {
+            Log.i(TAG, "calculateStates: Rootstate: ");
             this.lastBoard = new Board(getBoardControl().getCurrentBoard());
             this.nodes = new ArrayList<>();
         }
@@ -66,15 +67,23 @@ public class AIControl {
             getBoardControl().setCurrentBoard(new Board(AMBOs, PITs));
         }
 
+        if (!iteration) {
+            this.rootState = new State(getBoardControl().getCurrentBoard());
+            this.root = new Node(rootState);
+            this.tree = new Tree(root);
+        }
+
         Log.i(TAG, "Board: " + this.nodes.toString());
 
         for (int i = 0; i < this.nodes.size(); i++) {
-            root.addChild(this.nodes.get(i));
+            this.root.addChild(this.nodes.get(i));
         }
 
-        Log.i(TAG, root.toString());
+        Log.i(TAG, this.tree.getRoot().toString());
 
-       return tree;
+
+
+        return this.tree;
 
     }
 
