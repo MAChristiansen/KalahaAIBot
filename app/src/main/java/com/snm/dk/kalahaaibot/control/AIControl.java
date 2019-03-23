@@ -31,24 +31,21 @@ public class AIControl {
             Log.i(TAG, "visitNode = LEAF! ");
         }
     }
-    private State rootState;
-    private Node root;
-    private Tree tree;
-    private boolean iteration;
 
-    private List<State> states;
+
+    private boolean iteration = false;
+
     private List<Node> nodes;
 
     private Board lastBoard = new Board();
 
-    public Tree calculateStates() {
-        if (!iteration) {
+    public Tree calculateStates(Node root) {
 
+        Tree tree = new Tree(root);
+
+        if (!iteration) {
             this.lastBoard = new Board(getBoardControl().getCurrentBoard());
-            this.rootState = new State(this.lastBoard);
-            this.root = new Node(rootState);
-            this.tree = new Tree(root);
-            this.states = new ArrayList<>();
+            this.nodes = new ArrayList<>();
         }
 
         //herfra skal vi findes alle børn til root. Og derefter børnene til børnene osv.
@@ -64,23 +61,20 @@ public class AIControl {
             for (Integer ints : getBoardControl().getCurrentBoard().getPitScores())
                 PITs.add(ints);
 
-            this.states.add(new State(new Board(getBoardControl().getCurrentBoard()), getBoardControl().moveAMBO(i,false, 0, false)));
+            this.nodes.add(new Node(new State(new Board(getBoardControl().getCurrentBoard()), getBoardControl().moveAMBO(i,false, 0, false))));
 
-            Log.i(TAG, "SET BOARD: " + this.lastBoard.toString());
             getBoardControl().setCurrentBoard(new Board(AMBOs, PITs));
         }
 
-        for (int i = 0; i < this.states.size(); i++) {
-            this.nodes.add(new Node(this.states.get(i)));
-        }
+        Log.i(TAG, "Board: " + this.nodes.toString());
 
         for (int i = 0; i < this.nodes.size(); i++) {
-            this.root.addChild(this.nodes.get(i));
+            root.addChild(this.nodes.get(i));
         }
 
-        Log.i(TAG, this.tree.toString());
+        Log.i(TAG, root.toString());
 
-        return this.tree;
+       return tree;
 
     }
 
