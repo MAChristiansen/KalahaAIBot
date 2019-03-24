@@ -2,12 +2,14 @@ package com.snm.dk.kalahaaibot.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.R;
+import com.snm.dk.kalahaaibot.control.ControlReg;
 import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
 import com.snm.dk.kalahaaibot.model.Tree;
@@ -75,8 +77,16 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
                getAIControl().buildTree(tree.getRoot());
 
+               getAIControl().findHeuristisk(tree.getRoot());
+
+                //Node optimal = getAIControl().getOptimalMove(tree);
+
+                //Den finder MAX spillerens bedste move
+                //Log.i(TAG, "Optimal Move: " + optimal.getState().getHeuristic());
+
+
                 /*
-                ControlReg.getAIControl().visitNode(root);
+                ControlReg.getAIControl().findHeuristisk(root);
                  */
 
                 /************* TEST AF TRÆ *************/
@@ -172,7 +182,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
                 node11.addChild(node5);
 
-                ControlReg.getAIControl().visitNode(tree.getRoot());
+                ControlReg.getAIControl().findHeuristisk(tree.getRoot());
 
                 Node optimal = ControlReg.getAIControl().getOptimalMove(tree);
 
@@ -195,7 +205,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
             dybte--;
             makeTree(dybte);
         }
-        //getAIControl().visitNode(this.root);
+        //getAIControl().findHeuristisk(this.root);
     }
 
 }

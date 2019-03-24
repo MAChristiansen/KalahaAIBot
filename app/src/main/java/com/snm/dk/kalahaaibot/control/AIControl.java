@@ -15,27 +15,26 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getBoardControl;
 public class AIControl {
 
     private final String TAG = "AIControl";
-    private final Integer depth = 4;
-    private Integer statesGenerated = 0;
+    private final Integer depth = 2;
 
-    public void visitNode(Node node) {
+    public void findHeuristisk(Node node) {
 
-        //Log.i(TAG, "visitNode: Utility = " + node.getState().getUtility());
+        //Log.i(TAG, "findHeuristisk: Utility = " + node.getState().getUtility());
 
         if (!(node.getChildren().isEmpty())) {
             for (Node n : node.getChildren()) {
-                visitNode(n);
+                findHeuristisk(n);
             }
         }
         else {
             //The node is a Leaf!
-            //Log.i(TAG, "visitNode = LEAF! ");
+            //Log.i(TAG, "findHeuristisk = LEAF! ");
             node.getState().setHeuristic(node.getState().getUtility());
-            visitParent(node);
+            calculateHeuristisk(node);
         }
     }
 
-    public void visitParent(Node node) {
+    public void calculateHeuristisk(Node node) {
 
         //Are we in the top layer?
         if (node.getParent().getParent() != null) {
@@ -57,33 +56,38 @@ public class AIControl {
                     parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
                 }
             }
-            visitParent(node.getParent());
+            calculateHeuristisk(node.getParent());
         }
     }
 
-    public void buildTree(Node node) {
-
-        if (statesGenerated >= depth) return;
-
-        if (node.getChildren().isEmpty()) {
-            //Vi er nået til et leaf!
-            node.setChildren(calculateStates(node));
-            buildTree(node);
+    public Tree buildTree(Node root) {
+        for (int i = 0; i < depth; i++) {
+            Log.i(TAG, i + "");
+            buildStatesToLeafs(root);
         }
-        else {
+
+        return new Tree(root);
+    }
+
+    public void buildStatesToLeafs(Node node) {
+        if (!(node.getChildren().isEmpty())) {
             for (Node n : node.getChildren()) {
-                buildTree(n);
+                buildStatesToLeafs(n);
             }
         }
-
-        Log.i(TAG, "States from root : " + node.getChildren().toString());
+        else {
+            Log.i(TAG, "Im the leaf: " + node.getState().getBoard().toString());
+            node.addChild(calculateStates(node));
+            Log.i(TAG, "And this is my Children: \n" + node.getChildren().toString());
+        }
     }
 
     public Node getOptimalMove(Tree tree) {
         Node optimal = null;
 
         for (Node n : tree.getRoot().getChildren()) {
-            if (optimal == null || n.getState().getHeuristic() < optimal.getState().getHeuristic()) {
+            //Log.i(TAG, "getOptimalMove: " + tree.getRoot().getChildren().toString());
+            if (optimal == null || n.getState().getHeuristic() > optimal.getState().getHeuristic()) {
                 //Log.i(TAG, "getOptimalMove: " + n.getState().getHeuristic());
                 optimal = n;
             }
@@ -98,21 +102,6 @@ public class AIControl {
     public List<Node> calculateStates(Node node) {
         this.nodes = new ArrayList<>();
 
-        if (node.getState().isPlayer()) {
-            for (int i = 5; i <= 11; i++) {
-                List<Integer> AMBOs = new ArrayList<>();
-                for (Integer ints : node.getState().getBoard().getAmboScores())
-                    AMBOs.add(ints);
-
-                List<Integer> PITs = new ArrayList<>();
-                for (Integer ints : node.getState().getBoard().getPitScores())
-                    PITs.add(ints);
-
-                this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, true, node.getState().getBoard()))));
-                node.getState().setBoard(new Board(AMBOs, PITs));
-            }
-        }
-        else {
             for (int i = 0; i <= 5; i++) {
                 List<Integer> AMBOs = new ArrayList<>();
                 for (Integer ints : node.getState().getBoard().getAmboScores())
@@ -125,7 +114,6 @@ public class AIControl {
                 this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard()))));
                 node.getState().setBoard(new Board(AMBOs, PITs));
             }
-        }
 
        /* // TODO FJERN SENERE
         for (Node of : nodes) {
