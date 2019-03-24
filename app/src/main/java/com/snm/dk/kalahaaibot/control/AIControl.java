@@ -37,7 +37,7 @@ public class AIControl {
     public List<Node> calculateStates(Node node) {
         this.nodes = new ArrayList<>();
 
-        for (int i = 0; i <= 5; i++) {
+        for (int i = 0; i <= 11; i++) {
             List<Integer> AMBOs = new ArrayList<>();
             for (Integer ints : node.getState().getBoard().getAmboScores())
                 AMBOs.add(ints);
@@ -46,16 +46,16 @@ public class AIControl {
             for (Integer ints : node.getState().getBoard().getPitScores())
                 PITs.add(ints);
 
-            boolean b = getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard());
-
-            this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), b)));
+            this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard()))));
             node.getState().setBoard(new Board(AMBOs, PITs));
         }
+
 
         // TODO FJERN SENERE
         for (Node of : nodes) {
             Log.i(TAG, "calculateStates: " + of.getState().toString());
         }
+
 
         return nodes;
     }
