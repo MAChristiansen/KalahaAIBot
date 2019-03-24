@@ -91,9 +91,6 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 Node root = new Node(state);
                 Tree tree = new Tree(root);
 
-
-
-
                 State state2 = new State(
                         getGameControl().getGameBoard(),
                         7,
