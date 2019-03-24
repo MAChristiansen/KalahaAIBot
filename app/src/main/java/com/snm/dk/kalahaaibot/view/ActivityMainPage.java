@@ -10,6 +10,10 @@ import android.widget.TextView;
 import com.snm.dk.kalahaaibot.R;
 import com.snm.dk.kalahaaibot.control.ControlReg;
 import com.snm.dk.kalahaaibot.control.TestClass;
+import com.snm.dk.kalahaaibot.model.Board;
+import com.snm.dk.kalahaaibot.model.Node;
+import com.snm.dk.kalahaaibot.model.State;
+import com.snm.dk.kalahaaibot.model.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +63,9 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         getGameControl().updateBoard(this.buttons, this.textViews);
     }
 
-    private TestClass test = new TestClass();
+    private State state = new State(getBoardControl().initBoard(new Board()));
+    private Node root = new Node(state);
+    private Tree tree = new Tree(root);
 
     @Override
     public void onClick(View v) {
@@ -71,7 +77,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                //test.testForLoop();
 
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-                ControlReg.getAIControl().calculateStates();
+               ControlReg.getAIControl().calculateStates(this.root);
 
                 /************* TEST AF TRÆ *************/
                 /*State state = new State(
