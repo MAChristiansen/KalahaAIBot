@@ -7,7 +7,7 @@ public class Node {
 
     private State state;
     private Node parent;
-    private ArrayList<Node> children;
+    private List<Node> children;
 
     public Node(State state, Node parent, ArrayList<Node> children) {
         this.state = state;
@@ -53,7 +53,11 @@ public class Node {
         return parent;
     }
 
-    public ArrayList<Node> getChildren() {
+    public List<Node> getChildren() {
         return children;
+    }
+
+    public void setChildren(List<Node> children) {
+        this.children = children;
     }
 }

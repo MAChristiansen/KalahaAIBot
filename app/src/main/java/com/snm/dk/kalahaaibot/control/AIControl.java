@@ -16,6 +16,7 @@ public class AIControl {
 
     private final String TAG = "AIControl";
     private final Integer depth = 4;
+    private Integer statesGenerated = 0;
 
     public void visitNode(Node node) {
 
@@ -60,6 +61,24 @@ public class AIControl {
         }
     }
 
+    public void buildTree(Node node) {
+
+        if (statesGenerated >= depth) return;
+
+        if (node.getChildren().isEmpty()) {
+            //Vi er nået til et leaf!
+            node.setChildren(calculateStates(node));
+            buildTree(node);
+        }
+        else {
+            for (Node n : node.getChildren()) {
+                buildTree(n);
+            }
+        }
+
+        Log.i(TAG, "States from root : " + node.getChildren().toString());
+    }
+
     public Node getOptimalMove(Tree tree) {
         Node optimal = null;
 
@@ -79,24 +98,39 @@ public class AIControl {
     public List<Node> calculateStates(Node node) {
         this.nodes = new ArrayList<>();
 
-        for (int i = 0; i <= 5; i++) {
-            List<Integer> AMBOs = new ArrayList<>();
-            for (Integer ints : node.getState().getBoard().getAmboScores())
-                AMBOs.add(ints);
+        if (node.getState().isPlayer()) {
+            for (int i = 5; i <= 11; i++) {
+                List<Integer> AMBOs = new ArrayList<>();
+                for (Integer ints : node.getState().getBoard().getAmboScores())
+                    AMBOs.add(ints);
 
-            List<Integer> PITs = new ArrayList<>();
-            for (Integer ints : node.getState().getBoard().getPitScores())
-                PITs.add(ints);
+                List<Integer> PITs = new ArrayList<>();
+                for (Integer ints : node.getState().getBoard().getPitScores())
+                    PITs.add(ints);
 
-            this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard()))));
-            node.getState().setBoard(new Board(AMBOs, PITs));
+                this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, true, node.getState().getBoard()))));
+                node.getState().setBoard(new Board(AMBOs, PITs));
+            }
+        }
+        else {
+            for (int i = 0; i <= 5; i++) {
+                List<Integer> AMBOs = new ArrayList<>();
+                for (Integer ints : node.getState().getBoard().getAmboScores())
+                    AMBOs.add(ints);
+
+                List<Integer> PITs = new ArrayList<>();
+                for (Integer ints : node.getState().getBoard().getPitScores())
+                    PITs.add(ints);
+
+                this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard()))));
+                node.getState().setBoard(new Board(AMBOs, PITs));
+            }
         }
 
-
-        // TODO FJERN SENERE
+       /* // TODO FJERN SENERE
         for (Node of : nodes) {
             Log.i(TAG, "calculateStates: " + of.getState().toString());
-        }
+        }*/
 
         return this.nodes;
 

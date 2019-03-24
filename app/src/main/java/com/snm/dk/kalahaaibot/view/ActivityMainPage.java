@@ -60,7 +60,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         getGameControl().updateBoard(this.buttons, this.textViews);
     }
 
-    private State state = new State(getGameControl().getGameBoard());
+    private State state = new State(getGameControl().getGameBoard(), false);
     private Node root = new Node(state);
     private Tree tree = new Tree(root);
     private List<Node> nodes;
@@ -73,7 +73,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 Fragment newFragment = new FragmentResult();*/
 
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-               makeTree(2);
+               getAIControl().buildTree(tree.getRoot());
 
                 /*
                 ControlReg.getAIControl().visitNode(root);
