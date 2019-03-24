@@ -8,8 +8,6 @@ import com.snm.dk.kalahaaibot.model.Board;
 
 import java.util.List;
 
-import static com.snm.dk.kalahaaibot.control.BoardControl.BALLS_PER_AMBO;
-import static com.snm.dk.kalahaaibot.control.BoardControl.ROW_LENGTH;
 import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class GameControl {
