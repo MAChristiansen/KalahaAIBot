@@ -2,6 +2,7 @@ package com.snm.dk.kalahaaibot.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -63,7 +64,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         getGameControl().updateBoard(this.buttons, this.textViews);
     }
 
-    private State state = new State(getBoardControl().initBoard(new Board()));
+    private State state = new State(getGameControl().getGameBoard());
     private Node root = new Node(state);
     private Tree tree = new Tree(root);
     private List<Node> nodes;
@@ -75,14 +76,8 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                /* View[] views = {layer, fragmentContainer};
                 Fragment newFragment = new FragmentResult();*/
 
-               //test.testForLoop();
-
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-
                makeTree(2);
-
-
-
 
                 /*
                 ControlReg.getAIControl().visitNode(root);
@@ -96,15 +91,15 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         if (this.nodes == null) {
             this.nodes = new ArrayList<>();
             this.nodes = getAIControl().calculateStates(this.root);
-
-            for (Node node : this.nodes) {
-                this.root.addChild(node);
-            }
+            this.root.addChild(this.nodes);
         }
 
         if (dybte > 0) {
-            this.root.getChildren();
+
+            dybte--;
+            makeTree(dybte);
         }
+        //getAIControl().visitNode(this.root);
     }
 
 }
