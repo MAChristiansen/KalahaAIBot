@@ -66,6 +66,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     private State state = new State(getBoardControl().initBoard(new Board()));
     private Node root = new Node(state);
     private Tree tree = new Tree(root);
+    private List<Node> nodes;
 
     @Override
     public void onClick(View v) {
@@ -77,55 +78,32 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                //test.testForLoop();
 
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-               ControlReg.getAIControl().calculateStates(this.root);
 
-                /************* TEST AF TRÆ *************/
-                /*State state = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(0) - ControlReg.getBoardControl().getCurrentBoard().getPitScores().get(1),
-                        ControlReg.getGameControl().getCurrentPlayer());
-                Node root = new Node(state);
-                Tree tree = new Tree(root);
+               makeTree(2);
 
 
-                State state2 = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        7,
-                        ControlReg.getGameControl().getCurrentPlayer());
 
-                State state3 = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        -9,
-                        ControlReg.getGameControl().getCurrentPlayer());
 
-                State state4 = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        10,
-                        ControlReg.getGameControl().getCurrentPlayer());
-
-                State state5 = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        -21,
-                        ControlReg.getGameControl().getCurrentPlayer());
-
-                State state6 = new State(
-                        ControlReg.getBoardControl().getCurrentBoard(),
-                        66,
-                        ControlReg.getGameControl().getCurrentPlayer());
-
-                Node node1 = new Node(state2);
-                Node node2 = new Node(state3);
-
-                root.addChild(node1);
-                root.addChild(node2);
-                node1.addChild(new Node(state4));
-                node1.addChild(new Node(state5));
-                node2.addChild(new Node(state6));
-
-                ControlReg.getAIControl().visitNode(root);*/
-
+                /*
+                ControlReg.getAIControl().visitNode(root);
+                 */
 
             }
+        }
+    }
+
+    private void makeTree(int dybte) {
+        if (this.nodes == null) {
+            this.nodes = new ArrayList<>();
+            this.nodes = getAIControl().calculateStates(this.root);
+
+            for (Node node : this.nodes) {
+                this.root.addChild(node);
+            }
+        }
+
+        if (dybte > 0) {
+            this.root.getChildren();
         }
     }
 
