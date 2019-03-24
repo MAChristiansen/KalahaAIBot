@@ -79,7 +79,7 @@ public class AIControl {
     public List<Node> calculateStates(Node node) {
         this.nodes = new ArrayList<>();
 
-        for (int i = 0; i <= 11; i++) {
+        for (int i = 0; i <= 5; i++) {
             List<Integer> AMBOs = new ArrayList<>();
             for (Integer ints : node.getState().getBoard().getAmboScores())
                 AMBOs.add(ints);
