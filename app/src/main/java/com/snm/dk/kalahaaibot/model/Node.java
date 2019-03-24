@@ -1,6 +1,7 @@
 package com.snm.dk.kalahaaibot.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Node {
 
@@ -19,9 +20,11 @@ public class Node {
         children = new ArrayList<>();
     }
 
-    public void addChild(Node node) {
-        node.parent = this;
-        children.add(node);
+    public void addChild(List<Node> nodes) {
+        for (Node node : nodes) {
+            node.parent = this;
+            children.add(node);
+        }
     }
 
     public void removeChild(int child) {
@@ -35,6 +38,11 @@ public class Node {
                 children.get(child).removeChild(i);
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.state.toString();
     }
 
     public State getState() {
