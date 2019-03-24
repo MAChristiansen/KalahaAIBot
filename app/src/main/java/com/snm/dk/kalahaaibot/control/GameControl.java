@@ -4,36 +4,45 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.snm.dk.kalahaaibot.model.Board;
+
 import java.util.List;
+
+import static com.snm.dk.kalahaaibot.control.BoardControl.BALLS_PER_AMBO;
+import static com.snm.dk.kalahaaibot.control.BoardControl.ROW_LENGTH;
+import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class GameControl {
 
     private final String TAG = "GameControl";
-    private BoardControl boardControl;
     private boolean player;
+    private Board gameBoard;
 
     public GameControl() {
-        boardControl = ControlReg.getBoardControl();
+        // Init currentBoard
+        this.gameBoard = new Board();
+        getBoardControl().initBoard(this.gameBoard);
+
         this.player = true;
     }
 
     public GameControl takeTurn(int playerPick) {
         // Player1
         if (this.player && playerPick > 5) {
-            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
+            this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            this.player = boardControl.moveAMBO(playerPick, false, 0, this.player);
+            this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         return this;
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
-        boardControl.updateBoard(buttons, textViews);
+        getBoardControl().updateBoard(buttons, textViews, this.gameBoard);
 
-        if (isGameDone(boardControl.getCurrentBoard().getAmboScores())) {
-            if (whoWon(boardControl.getCurrentBoard().getPitScores())) {
+        if (isGameDone(this.gameBoard.getAmboScores())) {
+            if (whoWon(this.gameBoard.getPitScores())) {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
             } else {
                 Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
@@ -41,10 +50,10 @@ public class GameControl {
 
         }
         if (this.player) {
-            textViews.get(2).setText("Player 1 turn: Total " + boardControl.getCount());
+            textViews.get(2).setText("Player 1 turn: Total " + getBoardControl().getCount(this.gameBoard));
         }
         else {
-            textViews.get(2).setText("Player 2 turn: Total " +boardControl.getCount());
+            textViews.get(2).setText("Player 2 turn: Total " + getBoardControl().getCount(this.gameBoard));
         }
     }
 
@@ -81,5 +90,11 @@ public class GameControl {
 
     public boolean getCurrentPlayer() {
         return player;
+    }
+    public Board getGameBoard() {
+        return gameBoard;
+    }
+    public void setGameBoard(Board gameBoard) {
+        this.gameBoard = gameBoard;
     }
 }
