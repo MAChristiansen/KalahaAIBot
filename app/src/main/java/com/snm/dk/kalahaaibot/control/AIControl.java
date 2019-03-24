@@ -41,50 +41,35 @@ public class AIControl {
 
     private Board lastBoard = new Board();
 
-    public Tree calculateStates() {
-
-        if (!iteration) {
-            Log.i(TAG, "calculateStates: Rootstate: ");
-            this.lastBoard = new Board(getBoardControl().getCurrentBoard());
-            this.nodes = new ArrayList<>();
-        }
-
-        //herfra skal vi findes alle børn til root. Og derefter børnene til børnene osv.
-
-        //visitNode(root);
+    public List<Node> calculateStates(Node node) {
+        this.nodes = new ArrayList<>();
 
         for (int i = 0; i <= 5; i++) {
             List<Integer> AMBOs = new ArrayList<>();
-            for (Integer ints : getBoardControl().getCurrentBoard().getAmboScores())
+            for (Integer ints : node.getState().getBoard().getAmboScores())
                 AMBOs.add(ints);
 
             List<Integer> PITs = new ArrayList<>();
-            for (Integer ints : getBoardControl().getCurrentBoard().getPitScores())
+            for (Integer ints : node.getState().getBoard().getPitScores())
                 PITs.add(ints);
 
-            this.nodes.add(new Node(new State(new Board(getBoardControl().getCurrentBoard()), getBoardControl().moveAMBO(i,false, 0, false))));
+            boolean b = getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard());
 
-            getBoardControl().setCurrentBoard(new Board(AMBOs, PITs));
+            this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), b)));
+
+            Log.i(TAG, "calculateStates: " + node.getState().getBoard().toString());
+            node.getState().setBoard(new Board(AMBOs, PITs));
         }
+        Log.i(TAG, "NODES: " + this.nodes.toString());
+        return nodes;
+    }
 
-        if (!iteration) {
+    /*
+     if (!iteration) {
             this.rootState = new State(getBoardControl().getCurrentBoard());
             this.root = new Node(rootState);
             this.tree = new Tree(root);
         }
-
-        Log.i(TAG, "Board: " + this.nodes.toString());
-
-        for (int i = 0; i < this.nodes.size(); i++) {
-            this.root.addChild(this.nodes.get(i));
-        }
-
-        Log.i(TAG, this.tree.getRoot().toString());
-
-
-
-        return this.tree;
-
-    }
+     */
 
 }
