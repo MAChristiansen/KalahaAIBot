@@ -17,51 +17,12 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 public class AIControl {
 
     private final String TAG = "AIControl";
-    private final Integer depth = 6;
+    private final Integer depth = 8;
 
-    public void findHeuristisk(Node node) {
-
-        //Log.i(TAG, "findHeuristisk: Utility = " + node.getState().getUtility());
-
-        if (!(node.getChildren().isEmpty())) {
-            for (Node n : node.getChildren()) {
-                findHeuristisk(n);
-            }
-        }
-        else {
-            //The node is a Leaf!
-            //Log.i(TAG, "findHeuristisk = LEAF! ");
-            node.getState().setHeuristic(node.getState().getUtility());
-            calculateHeuristisk(node);
-        }
-    }
-
-    public void calculateHeuristisk(Node node) {
-
-        //Are we in the top layer?
-        if (node.getParent().getParent() != null) {
-
-            //generate parent from node
-            Node parent = node.getParent();
-
-            //Log.i(TAG, "Node Utility " + node.getState().getUtility() + " Node parent: " + parent.getState().getUtility());
-
-            if (parent.getState().isPlayer()) {
-                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) < parent.getState().getHeuristic()) {
-                    //Log.i(TAG, "Im setting node  " + parent.getState().getUtility() + " from H " + parent.getState().getHeuristic() + " to " + (node.getState().getHeuristic() + parent.getState().getUtility()));
-                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
-                }
-            }
-            else {
-                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) > parent.getState().getHeuristic()) {
-                    //Log.i(TAG, "Im setting node  " + parent.getState().getUtility() + " from H " + parent.getState().getHeuristic() + " to " + (node.getState().getHeuristic() + parent.getState().getUtility()));
-                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
-                }
-            }
-            calculateHeuristisk(node.getParent());
-        }
-    }
-
+    /**
+     * Takes a AI move based on MiniMax tree-search.
+     * @return a int that represent the optimal chose of ambo.
+     */
     public int takeAITurn() {
         List<Integer> AMBOs = new ArrayList<>();
         for (Integer ints : getGameControl().getGameBoard().getAmboScores())
@@ -71,55 +32,118 @@ public class AIControl {
         for (Integer ints : getGameControl().getGameBoard().getPitScores())
             PITs.add(ints);
 
-        Board b = new Board(AMBOs, PITs);
+        //Build a new board based on the gameBoard from the GameControl. A workaround to avoid pointer issue.
+        Board board = new Board(AMBOs, PITs);
 
-        State state = new State(b, false);
-        Node root = new Node(state, 0);
+        //Generate the tree with the root node.
+        //We always start the tree from a AI chose. Therefore the player is false = AI.
+        State state = new State(board, false);
+        Node root = new Node(state,0);
         Tree tree = new Tree(root);
 
-        getAIControl().buildTree(tree.getRoot());
+        //Building the tree based on the suggested depth.
+        buildTree(tree.getRoot());
 
-        //Log.i(TAG, "Im Starting to calculate the next move...");
-        getAIControl().findHeuristisk(tree.getRoot());
-        //Log.i(TAG, "Im done finding the move!");
+        //Find the heuristic values for all the nodes in the tree.
+        findHeuristic(tree.getRoot());
 
-        //Log.i(TAG, "Tree: " + tree.getRoot().getChildren().toString());
-
+        //Find the index to the optimal child.
         int optimal = getAIControl().getOptimalMove(tree);
 
         Log.i(TAG, "Optimal index: " + optimal);
 
-        //Den finder MAX spillerens bedste move
-
+        // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
     }
 
-    public Tree buildTree(Node root) {
-        for (int i = 0; i < depth; i++) {
-            //Log.i(TAG, i + "");
-            buildStatesToLeafs(root);
+    /**
+     * Goes to the leafs, and calculate the heuristic values - recursive.
+     * @param node
+     */
+    private void findHeuristic(Node node) {
+        if (!(node.getChildren().isEmpty())) {
+            for (Node n : node.getChildren()) {
+                findHeuristic(n);
+            }
         }
-
-        return new Tree(root);
+        else {
+            //We found a leaf! - now starts the calculation.
+            node.getState().setHeuristic(node.getState().getUtility());
+            calculateHeuristic(node);
+        }
     }
 
-    public void buildStatesToLeafs(Node node) {
+    /**
+     * Method use in "findHeuristic()". Calculate the heuristic value for all the nodes.
+     * @param node
+     */
+    private void calculateHeuristic(Node node) {
+
+        //Are we in the top layer?
+        if (node.getParent().getParent() != null) {
+
+            //generate parent from node
+            Node parent = node.getParent();
+
+            // checks if the node is a goal state - if so, we set the heuristic value to 1000,
+            // or if the node is a losing state, we set we set the heuristic value to 1000.
+            checkGoalState(node);
+
+            // if the parent is a Human-player node, calculate the heuristic value.
+            if (parent.getState().isPlayer()) {
+                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) < parent.getState().getHeuristic()) {
+                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
+                }
+            }
+            // if the parent is a AI-player node, calculate the heuristic value.
+            else {
+                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) > parent.getState().getHeuristic()) {
+                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
+                }
+            }
+
+            //start the recursive algo to the root.
+            calculateHeuristic(node.getParent());
+        }
+    }
+
+    /**
+     * A method that build the tree structure.
+     * @param node
+     */
+    private void buildTree(Node node) {
+        // creating the tree by looping over from 0 -> 'depth', and build children to the leafs.
+        for (int i = 0; i < depth; i++) {
+            buildStatesToLeafs(node);
+        }
+    }
+
+    /**
+     * Takes in a node, and build til children to that node.
+     * @param node
+     */
+    private void buildStatesToLeafs(Node node) {
         if (!(node.getChildren().isEmpty())) {
             for (Node n : node.getChildren()) {
                 buildStatesToLeafs(n);
             }
         }
         else {
-            //Log.i(TAG, "Im the leaf: " + node.getState().getBoard().toString() + " and my player is: " + node.getState().isPlayer());
+            //We found the leaf, and now build the children to the node.
             node.addChild(calculateStates(node));
-            //Log.i(TAG, "boards " + node.getChildren().toString());
+
         }
     }
 
-    public int getOptimalMove(Tree tree) {
+    /**
+     * Takes a tree and return a integer that represent the index for the optimal child from the root node.
+     * @param tree - the tree you want to find the best move from.
+     * @return a integer that represent the index for the optimal child from the root node.
+     */
+    private int getOptimalMove(Tree tree) {
         int optimal = 0;
 
-        Integer optimalHueristic = 1000;
+        Integer optimalHueristic = 1001;
 
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
             Log.i(TAG, "My heuristik: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
@@ -131,7 +155,8 @@ public class AIControl {
         return optimal;
     }
 
-    public List<Node> calculateStates(Node node) {
+
+    private List<Node> calculateStates(Node node) {
         List<Node> nodes = new ArrayList<>();
         int playerStart;
         int playerEnd;
