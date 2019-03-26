@@ -23,33 +23,21 @@ public class Board {
         this.pitScores = board.getPitScores();
     }
 
+    // Getter
     public List<Integer> getAmboScores() {
         return amboScores;
-    }
-    public void setAmboScores(List<Integer> amboScores) {
-        this.amboScores = amboScores;
     }
     public List<Integer> getPitScores() {
         return pitScores;
     }
+
+    // Setter
+    public void setAmboScores(List<Integer> amboScores) {
+        this.amboScores = amboScores;
+    }
     public void setPitScores(List<Integer> pitScores) {
         this.pitScores = pitScores;
     }
-
-    /*public State getCurrentGameState(List<Integer> amboScores, List<Integer> pitScores) {
-
-        ArrayList<Integer> gameState = new ArrayList<>();
-        gameState.add(pitScores.get(0));
-
-        for (int i = 0; i < amboScores.size(); i++) {
-            gameState.add(amboScores.get(i));
-        }
-
-        gameState.add(pitScores.get(1));
-
-        // TODO: find a solution to player turn
-        return new State(gameState, false);
-    }*/
 
     @Override
     public String toString() {

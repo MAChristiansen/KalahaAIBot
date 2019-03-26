@@ -23,24 +23,22 @@ public class Node {
         }
     }
 
-    @Override
-    public String toString() {
-        return this.state.toString();
-    }
-
+    // Getter
     public State getState() {
         return state;
     }
-
     public Node getParent() {
         return parent;
     }
-
     public List<Node> getChildren() {
         return children;
     }
-
     public int getPlayerPick() {
         return playerPick;
+    }
+
+    @Override
+    public String toString() {
+        return this.state.toString();
     }
 }
