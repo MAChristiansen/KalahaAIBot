@@ -1,10 +1,13 @@
 package com.snm.dk.kalahaaibot.model;
 
+import android.util.Log;
+
 import java.sql.Array;
 import java.util.ArrayList;
 
 public class State {
 
+    private final String TAG = "STATE";
     private Board board;
     private Integer utility;
     private Integer heuristic = null;

@@ -17,7 +17,7 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 public class AIControl {
 
     private final String TAG = "AIControl";
-    private final Integer depth = 8;
+    private final Integer depth = 6;
 
     public void findHeuristisk(Node node) {
 
@@ -85,11 +85,13 @@ public class AIControl {
 
         //Log.i(TAG, "Tree: " + tree.getRoot().getChildren().toString());
 
-        Node optimal = getAIControl().getOptimalMove(tree);
+        int optimal = getAIControl().getOptimalMove(tree);
+
+        Log.i(TAG, "Optimal index: " + optimal);
 
         //Den finder MAX spillerens bedste move
 
-        return optimal.getPlayerPick();
+        return tree.getRoot().getChildren().get(optimal).getPlayerPick();
     }
 
     public Tree buildTree(Node root) {
@@ -111,29 +113,23 @@ public class AIControl {
             //Log.i(TAG, "Im the leaf: " + node.getState().getBoard().toString() + " and my player is: " + node.getState().isPlayer());
             node.addChild(calculateStates(node));
             //Log.i(TAG, "boards " + node.getChildren().toString());
-/*            for (Node n : node.getChildren()) {
-                Log.i(TAG, "Child: " + n.getState().isPlayer());
-            }*/
-
         }
     }
 
-    public Node getOptimalMove(Tree tree) {
-        Node optimal = null;
+    public int getOptimalMove(Tree tree) {
+        int optimal = 0;
 
-        for (Node n : tree.getRoot().getChildren()) {
-            //Log.i(TAG, "getOptimalMove: " + tree.getRoot().getChildren().toString());
-            if (optimal == null || n.getState().getHeuristic() < optimal.getState().getHeuristic()) {
-                //Log.i(TAG, "getOptimalMove: " + n.getState().getHeuristic());
-                optimal = n;
+        Integer optimalHueristic = 1000;
+
+        for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
+            Log.i(TAG, "My heuristik: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
+            if (tree.getRoot().getChildren().get(i).getState().getHeuristic() < optimalHueristic) {
+                optimal = i;
+                optimalHueristic = tree.getRoot().getChildren().get(i).getState().getHeuristic();
             }
-
         }
-
         return optimal;
     }
-
-
 
     public List<Node> calculateStates(Node node) {
         List<Node> nodes = new ArrayList<>();
@@ -163,7 +159,6 @@ public class AIControl {
                 node.getState().setBoard(new Board(AMBOs, PITs));
             }
         }
-
         return nodes;
     }
 
