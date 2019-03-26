@@ -101,19 +101,29 @@ public class AIControl {
 
     public List<Node> calculateStates(Node node) {
         this.nodes = new ArrayList<>();
+        int playerStart;
+        int playerEnd;
 
-            for (int i = 0; i <= 5; i++) {
-                List<Integer> AMBOs = new ArrayList<>();
-                for (Integer ints : node.getState().getBoard().getAmboScores())
-                    AMBOs.add(ints);
+        if (node.getState().isPlayer()) {
+            playerStart = 6;
+            playerEnd = 11;
+        } else {
+            playerStart = 0;
+            playerEnd = 5;
+        }
 
-                List<Integer> PITs = new ArrayList<>();
-                for (Integer ints : node.getState().getBoard().getPitScores())
-                    PITs.add(ints);
+        for (int i = playerStart; i <= playerEnd; i++) {
+            List<Integer> AMBOs = new ArrayList<>();
+            for (Integer ints : node.getState().getBoard().getAmboScores())
+                AMBOs.add(ints);
 
-                this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, false, node.getState().getBoard()))));
-                node.getState().setBoard(new Board(AMBOs, PITs));
-            }
+            List<Integer> PITs = new ArrayList<>();
+            for (Integer ints : node.getState().getBoard().getPitScores())
+                PITs.add(ints);
+
+            this.nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, !node.getState().isPlayer(), node.getState().getBoard()))));
+            node.getState().setBoard(new Board(AMBOs, PITs));
+        }
 
        /* // TODO FJERN SENERE
         for (Node of : nodes) {
@@ -121,7 +131,6 @@ public class AIControl {
         }*/
 
         return this.nodes;
-
     }
 
 }
