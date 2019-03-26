@@ -58,7 +58,18 @@ public class GameControl {
         }
     }
 
-    private boolean isGameDone(List<Integer> board) {
+    public int getSumOfStonesInAmbos(List<Integer> board) {
+        int sum = 0;
+
+        //calculate player 1 ambo score
+        for (int i = 0; i < board.size(); i++) {
+            sum += board.get(i);
+        }
+
+        return sum;
+    }
+
+    public boolean isGameDone(List<Integer> board) {
 
         Integer player1AmboScore = 0;
         Integer player2AmboScore = 0;
