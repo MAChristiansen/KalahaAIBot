@@ -33,6 +33,12 @@ public class BoardControl {
         return new Board(board.getAmboScores(), board.getPitScores());
     }
 
+    /**
+     * Updates the games board, by the param: board.
+     * @param buttons
+     * @param textViews
+     * @param board
+     */
     public void updateBoard(List<Button> buttons, List<TextView> textViews, Board board) {
         for (int i = 0; i < buttons.size(); i++) {
             buttons.get(i).setText(board.getAmboScores().get(i).toString());
@@ -43,27 +49,15 @@ public class BoardControl {
         textViews.get(1).setText(board.getPitScores().get(1).toString());
     }
 
-    public List<String> updateAmbos(Board board) {
-
-        List<String> amboScores = new ArrayList<>();
-
-        for (int i = 0; i < ROW_LENGTH; i++) {
-            amboScores.set(i, board.getAmboScores().get(i).toString());
-        }
-
-        return amboScores;
-    }
-
-    public List<String> updatePits(Board board) {
-
-        List<String> pitScores = new ArrayList<>();
-
-        pitScores.set(0, board.getPitScores().get(0).toString());
-        pitScores.set(1, board.getPitScores().get(1).toString());
-
-        return pitScores;
-    }
-
+    /**
+     * Game logic. Here we make the move based on the players pick.
+     * @param playerPick - witch button is pressed.
+     * @param iteration - have we done this recursive.
+     * @param AMBO - how many stones do we have in the hand.
+     * @param player - which player is playing
+     * @param board - witch board are we playing on.
+     * @return - return a boolean to represent the next player.
+     */
     public boolean moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player, Board board) {
         int i = 0;
         int tempAMBO;
@@ -86,7 +80,6 @@ public class BoardControl {
                 }
                 i--;
 
-                //Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player1 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
                 if (player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
                     board.getPitScores().set(0, board.getAmboScores().get(i) + board.getPitScores().get(0) + board.getAmboScores().get(i-6));
@@ -121,7 +114,6 @@ public class BoardControl {
                 }
                 i++;
 
-                //Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player2 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
                 if (!player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
                     board.getPitScores().set(1, board.getAmboScores().get(i) + board.getPitScores().get(1) + board.getAmboScores().get(i+6));
@@ -150,9 +142,13 @@ public class BoardControl {
         if (player) {return  false;} else {return true;}
     }
 
+    /**
+     * A help method for counting all the stones on the board.
+     * @param board
+     * @return
+     */
     public int getCount(Board board) {
         int count = 0;
-        //Log.i(TAG, board.getAmboScores().toString());
         for (int i : board.getAmboScores()) {
             count += i;
 
