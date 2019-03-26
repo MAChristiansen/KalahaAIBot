@@ -71,7 +71,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if (btnAIMove == v) {
-            Log.i(TAG, "onClick: Vi er her nu...");
+            //Log.i(TAG, "onClick: Vi er her nu...");
             return;
         }
 

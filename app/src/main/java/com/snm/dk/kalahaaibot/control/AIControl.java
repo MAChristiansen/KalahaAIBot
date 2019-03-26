@@ -17,11 +17,7 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 public class AIControl {
 
     private final String TAG = "AIControl";
-    private final Integer depth = 4;
-
-    private State state = new State(getGameControl().getGameBoard(), false);
-    private Node root = new Node(state, 0);
-    private Tree tree = new Tree(root);
+    private final Integer depth = 8;
 
     public void findHeuristisk(Node node) {
 
@@ -67,32 +63,31 @@ public class AIControl {
     }
 
     public int takeAITurn() {
-        getAIControl().buildTree(this.tree.getRoot());
-
-        //Log.i(TAG, "Im Starting to calculate the next move...");
-        getAIControl().findHeuristisk(this.tree.getRoot());
-        //Log.i(TAG, "Im done finding the move!");
-
-        Log.i(TAG, "Tree: " + this.tree.getRoot().getChildren().toString());
-
-        Node optimal = getAIControl().getOptimalMove(this.tree);
-
-        //Den finder MAX spillerens bedste move
-        Log.i(TAG, "Optimal Move: " + optimal.getState().getBoard().toString());
-
-
         List<Integer> AMBOs = new ArrayList<>();
-        for (Integer ints : optimal.getState().getBoard().getAmboScores())
+        for (Integer ints : getGameControl().getGameBoard().getAmboScores())
             AMBOs.add(ints);
 
         List<Integer> PITs = new ArrayList<>();
-        for (Integer ints : optimal.getState().getBoard().getPitScores())
+        for (Integer ints : getGameControl().getGameBoard().getPitScores())
             PITs.add(ints);
 
         Board b = new Board(AMBOs, PITs);
 
-        Log.i(TAG, "AI board Pick" + b.toString());
-        Log.i(TAG, "Node playerPick: " + optimal.getPlayerPick());
+        State state = new State(b, false);
+        Node root = new Node(state, 0);
+        Tree tree = new Tree(root);
+
+        getAIControl().buildTree(tree.getRoot());
+
+        //Log.i(TAG, "Im Starting to calculate the next move...");
+        getAIControl().findHeuristisk(tree.getRoot());
+        //Log.i(TAG, "Im done finding the move!");
+
+        //Log.i(TAG, "Tree: " + tree.getRoot().getChildren().toString());
+
+        Node optimal = getAIControl().getOptimalMove(tree);
+
+        //Den finder MAX spillerens bedste move
 
         return optimal.getPlayerPick();
     }
@@ -128,7 +123,7 @@ public class AIControl {
 
         for (Node n : tree.getRoot().getChildren()) {
             //Log.i(TAG, "getOptimalMove: " + tree.getRoot().getChildren().toString());
-            if (optimal == null || n.getState().getHeuristic() > optimal.getState().getHeuristic()) {
+            if (optimal == null || n.getState().getHeuristic() < optimal.getState().getHeuristic()) {
                 //Log.i(TAG, "getOptimalMove: " + n.getState().getHeuristic());
                 optimal = n;
             }

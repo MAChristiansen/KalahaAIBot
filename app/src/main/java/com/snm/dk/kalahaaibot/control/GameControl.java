@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.model.Board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.snm.dk.kalahaaibot.control.ControlReg.*;
@@ -27,12 +28,10 @@ public class GameControl {
     public GameControl takeTurn(int playerPick) {
         // Player1
         if (this.player && playerPick > 5) {
-            Log.i(TAG, "takeTurn: " + player);
             this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
-            Log.i(TAG, "takeTurn: AI");
             this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         return this;
@@ -54,8 +53,8 @@ public class GameControl {
         }
         else {
             textViews.get(2).setText("Player 2 turn: Total " + getBoardControl().getCount(this.gameBoard));
-            getAIControl().takeAITurn();
-            //updateBoard(buttons, textViews);
+            takeTurn(getAIControl().takeAITurn());
+            updateBoard(buttons, textViews);
         }
     }
 

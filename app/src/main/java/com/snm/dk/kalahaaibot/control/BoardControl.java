@@ -150,7 +150,7 @@ public class BoardControl {
 
     public int getCount(Board board) {
         int count = 0;
-        Log.i(TAG, board.getAmboScores().toString());
+        //Log.i(TAG, board.getAmboScores().toString());
         for (int i : board.getAmboScores()) {
             count += i;
 

@@ -132,7 +132,7 @@ public class TestClass {
         */
 
         Board newBoard = new Board(currentBoard);
-        Log.i(TAG, newBoard.toString());
+        //Log.i(TAG, newBoard.toString());
 
         for (int i = 0; i <= 5; i++) {
             List<Integer> output = new ArrayList<>();
@@ -143,10 +143,10 @@ public class TestClass {
             currentBoard.getAmboScores().set(i, 0);
             this.boards.add(new Board(this.currentBoard));
             currentBoard = new Board(output, this.pitScores);
-            Log.i(TAG, "SET BOARD: " + currentBoard);
+            //Log.i(TAG, "SET BOARD: " + currentBoard);
         }
 
-        Log.i(TAG, this.boards + "");
+        //Log.i(TAG, this.boards + "");
 
     }
 
