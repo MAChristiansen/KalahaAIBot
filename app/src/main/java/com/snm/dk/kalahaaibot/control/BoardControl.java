@@ -84,7 +84,7 @@ public class BoardControl {
                 }
                 i--;
 
-                Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
+                //Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player1 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
                 if (player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
                     board.getPitScores().set(0, board.getAmboScores().get(i) + board.getPitScores().get(0) + board.getAmboScores().get(i-6));
@@ -119,7 +119,7 @@ public class BoardControl {
                 }
                 i++;
 
-                Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
+                //Log.i(TAG, "AMBO: " + tempAMBO + " i: " + i);
                 // If player2 put the last ball in a empty ambo, both the remaining ball and the opponents straight ambo.
                 if (!player && tempAMBO == 0 && board.getAmboScores().get(i) == 1) {
                     board.getPitScores().set(1, board.getAmboScores().get(i) + board.getPitScores().get(1) + board.getAmboScores().get(i+6));

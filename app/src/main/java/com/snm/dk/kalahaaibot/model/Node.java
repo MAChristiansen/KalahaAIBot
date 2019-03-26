@@ -7,6 +7,7 @@ public class Node {
 
     private State state;
     private Node parent;
+    private int playerPick;
     private List<Node> children;
 
     public Node(State state, Node parent, ArrayList<Node> children) {
@@ -15,8 +16,9 @@ public class Node {
         this.children = children;
     }
 
-    public Node(State state) {
+    public Node(State state, int playerPick) {
         this.state = state;
+        this.playerPick = playerPick;
         children = new ArrayList<>();
     }
 
@@ -59,5 +61,9 @@ public class Node {
 
     public void setChildren(List<Node> children) {
         this.children = children;
+    }
+
+    public int getPlayerPick() {
+        return playerPick;
     }
 }

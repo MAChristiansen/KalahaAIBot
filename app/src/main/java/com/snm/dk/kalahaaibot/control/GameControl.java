@@ -27,10 +27,12 @@ public class GameControl {
     public GameControl takeTurn(int playerPick) {
         // Player1
         if (this.player && playerPick > 5) {
+            Log.i(TAG, "takeTurn: " + player);
             this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         // Player2
         else if (!this.player && playerPick <= 5) {
+            Log.i(TAG, "takeTurn: AI");
             this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
         }
         return this;
@@ -52,6 +54,8 @@ public class GameControl {
         }
         else {
             textViews.get(2).setText("Player 2 turn: Total " + getBoardControl().getCount(this.gameBoard));
+            getAIControl().takeAITurn();
+            //updateBoard(buttons, textViews);
         }
     }
 
@@ -70,7 +74,7 @@ public class GameControl {
             player2AmboScore += board.get(i);
         }
 
-        Log.i(TAG, "isGameDone: player1Score: " + player1AmboScore + " Player2Score: " + player2AmboScore);
+        //Log.i(TAG, "isGameDone: player1Score: " + player1AmboScore + " Player2Score: " + player2AmboScore);
 
         if (player1AmboScore == 0 || player2AmboScore == 0 ) {
             return true;
