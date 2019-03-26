@@ -21,12 +21,9 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class ActivityMainPage extends AppCompatActivity implements View.OnClickListener {
 
-    private final String TAG = "GameMode";
-
     private List<Button> buttons;
     private List<TextView> textViews;
     private FrameLayout layer, fragmentContainer;
-    private Button btnAIMove;
 
     private final int[] BUTTON_IDS = {R.id.btnP2_1, R.id.btnP2_2, R.id.btnP2_3, R.id.btnP2_4, R.id.btnP2_5, R.id.btnP2_6,
             R.id.btnP1_1, R.id.btnP1_2, R.id.btnP1_3, R.id.btnP1_4, R.id.btnP1_5, R.id.btnP1_6};
@@ -40,9 +37,6 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
         layer = findViewById(R.id.layer);
         fragmentContainer = findViewById(R.id.fragmentContainer);
-        btnAIMove = findViewById(R.id.btnAIMove);
-        btnAIMove.setOnClickListener(this);
-
 
         int k = 0;
         // Building Button Array
@@ -66,22 +60,11 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         getGameControl().updateBoard(this.buttons, this.textViews);
     }
 
-
-
     @Override
     public void onClick(View v) {
-        if (btnAIMove == v) {
-            //Log.i(TAG, "onClick: Vi er her nu...");
-            return;
-        }
-
         for (int i = 0; i < this.buttons.size(); i++) {
             if (this.buttons.get(i) == v) {
-               /* View[] views = {layer, fragmentContainer};
-                Fragment newFragment = new FragmentResult();*/
-
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
-
             }
         }
     }

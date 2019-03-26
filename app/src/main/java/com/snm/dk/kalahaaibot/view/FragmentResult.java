@@ -1,7 +1,5 @@
 package com.snm.dk.kalahaaibot.view;
 
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,11 +22,9 @@ public class FragmentResult extends Fragment implements View.OnClickListener {
     private Button btnPlayAgain;
     private FrameLayout layer, fragmentContainer;
 
-
     public FragmentResult() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

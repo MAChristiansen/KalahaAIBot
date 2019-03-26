@@ -1,19 +1,16 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.model.Board;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.snm.dk.kalahaaibot.control.ControlReg.*;
 
 public class GameControl {
 
-    private final String TAG = "GameControl";
     private boolean player;
     private Board gameBoard;
 
@@ -42,9 +39,11 @@ public class GameControl {
 
         if (isGameDone(this.gameBoard.getAmboScores())) {
             if (whoWon(this.gameBoard.getPitScores())) {
-                Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
+                // TODO Skriv det i UI
+                //Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
             } else {
-                Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
+                // TODO Skriv det i UI
+                //Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
             }
 
         }

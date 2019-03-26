@@ -1,13 +1,7 @@
 package com.snm.dk.kalahaaibot.model;
 
-import android.util.Log;
-
-import java.sql.Array;
-import java.util.ArrayList;
-
 public class State {
 
-    private final String TAG = "STATE";
     private Board board;
     private Integer utility;
     private Integer heuristic = null;
@@ -19,41 +13,37 @@ public class State {
         this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
     }
 
-
+    // Getter
     public Board getBoard() {
         return board;
     }
-
-    public void setBoard(Board board) {
-        this.board = board;
+    public Integer getHeuristic() {
+        return heuristic;
     }
-
     public Integer getUtility() {
         return utility;
     }
-
-    public void setUtility(Integer utility) {
-        this.utility = utility;
-    }
-
     public boolean isPlayer() {
         return player;
     }
 
+    // Setter
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+    public void setHeuristic(Integer heuristic) {
+        this.heuristic = heuristic;
+    }
+    public void setUtility(Integer utility) {
+        this.utility = utility;
+    }
     public void setPlayer(boolean player) {
         this.player = player;
     }
 
-    public Integer getHeuristic() {
-        return heuristic;
-    }
-
-    public void setHeuristic(Integer heuristic) {
-        this.heuristic = heuristic;
-    }
-    
     @Override
     public String toString() {
         return this.board.toString();
     }
+
 }

@@ -5,12 +5,9 @@ import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.model.Board;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BoardControl {
-
-    private final String TAG = "BoardControl";
 
     public static final int ROW_LENGTH = 12;
     public static final int BALLS_PER_AMBO = 6;

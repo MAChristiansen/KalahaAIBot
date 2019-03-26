@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +23,6 @@ public class VisualControl {
 
     public static void hideDialog(FragmentActivity activity, View[] views) {
         fadeOutAnimation(views);
-
         activity.getSupportFragmentManager().popBackStack();
     }
 

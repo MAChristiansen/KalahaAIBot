@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.util.Log;
 import com.snm.dk.kalahaaibot.model.Board;
 import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
@@ -13,7 +12,6 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 
 public class AIControl {
 
-    private final String TAG = "AIControl";
     private final Integer depth = 8;
 
     /**
@@ -46,8 +44,6 @@ public class AIControl {
 
         //Find the index to the optimal child.
         int optimal = getAIControl().getOptimalMove(tree);
-
-        Log.i(TAG, "Optimal index: " + optimal);
 
         // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
@@ -128,7 +124,6 @@ public class AIControl {
         else {
             //We found the leaf, and now build the children to the node.
             node.addChild(calculateStates(node));
-
         }
     }
 
@@ -143,7 +138,6 @@ public class AIControl {
         Integer optimalHueristic = 1001;
 
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
-            Log.i(TAG, "My heuristik: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
             if (tree.getRoot().getChildren().get(i).getState().getHeuristic() < optimalHueristic) {
                 optimal = i;
                 optimalHueristic = tree.getRoot().getChildren().get(i).getState().getHeuristic();
