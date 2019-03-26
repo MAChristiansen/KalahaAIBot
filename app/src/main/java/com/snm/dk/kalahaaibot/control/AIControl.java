@@ -1,15 +1,12 @@
 package com.snm.dk.kalahaaibot.control;
 
 import android.util.Log;
-
 import com.snm.dk.kalahaaibot.model.Board;
 import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
 import com.snm.dk.kalahaaibot.model.Tree;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.snm.dk.kalahaaibot.control.ControlReg.getAIControl;
 import static com.snm.dk.kalahaaibot.control.ControlReg.getBoardControl;
 import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
@@ -155,7 +152,11 @@ public class AIControl {
         return optimal;
     }
 
-
+    /**
+     * Generate states based on a node. A help method for 'buildStatesToLeafs' that generates children to the leaf.
+     * @param node
+     * @return - A list of children to the node.
+     */
     private List<Node> calculateStates(Node node) {
         List<Node> nodes = new ArrayList<>();
         int playerStart;
