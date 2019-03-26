@@ -13,22 +13,12 @@ public class State {
     private Integer heuristic = null;
     private boolean player;
 
-    public State(Board board, Integer utility, boolean player) {
-        this.board = board;
-        this.utility = utility;
-        this.player = player;
-    }
-
     public State(Board board, boolean player) {
         this.board = board;
         this.player = player;
         this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
     }
 
-    public State(Board board) {
-        this.board = board;
-        this.utility = board.getPitScores().get(0) - board.getPitScores().get(1);
-    }
 
     public Board getBoard() {
         return board;

@@ -10,12 +10,6 @@ public class Node {
     private int playerPick;
     private List<Node> children;
 
-    public Node(State state, Node parent, ArrayList<Node> children) {
-        this.state = state;
-        this.parent = parent;
-        this.children = children;
-    }
-
     public Node(State state, int playerPick) {
         this.state = state;
         this.playerPick = playerPick;
@@ -26,19 +20,6 @@ public class Node {
         for (Node node : nodes) {
             node.parent = this;
             children.add(node);
-        }
-    }
-
-    public void removeChild(int child) {
-        if(children.isEmpty()) {
-            children.remove(child);
-        }
-        else
-        {
-            for(int i = 0; i < children.size(); i++)
-            {
-                children.get(child).removeChild(i);
-            }
         }
     }
 
@@ -57,10 +38,6 @@ public class Node {
 
     public List<Node> getChildren() {
         return children;
-    }
-
-    public void setChildren(List<Node> children) {
-        this.children = children;
     }
 
     public int getPlayerPick() {

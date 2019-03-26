@@ -162,4 +162,34 @@ public class AIControl {
         return nodes;
     }
 
+    /**
+     * Checks the node for a Goal state. If the node is a Goal state we set the heuristic value of the node.
+     * @param node
+     */
+    private void checkGoalState(Node node) {
+
+        // If the game is done, hence one of the rows are empty, and the AI got more stones than the Human player
+        if (getGameControl().isGameDone(node.getState().getBoard().getAmboScores()) && node.getState().getBoard().getPitScores().get(1)
+                > node.getState().getBoard().getPitScores().get(0)) {
+            node.getState().setHeuristic(-1000);
+
+        // If the game is done, hence one of the rows are empty, and the AI got more stones than the Human player
+        } else if (getGameControl().isGameDone(node.getState().getBoard().getAmboScores()) && node.getState().getBoard().getPitScores().get(1)
+                < node.getState().getBoard().getPitScores().get(0)) {
+            node.getState().setHeuristic(1000);
+        }
+
+        // If the difference between the pit (when the AI is in the lead) is bigger than the amount of stones left in play
+        // set the heuristic-value to -1000.
+        else if ((node.getState().getBoard().getPitScores().get(1) - node.getState().getBoard().getPitScores().get(0))
+                > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
+            node.getState().setHeuristic(-1000);
+        }
+        // If the difference between the pit (when the human player is in the lead) is bigger than the amount of stones left in play
+        // set the heuristic-value to -1000.
+        else  if ((node.getState().getBoard().getPitScores().get(0) - node.getState().getBoard().getPitScores().get(1))
+                > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
+            node.getState().setHeuristic(1000);
+        }
+    }
 }

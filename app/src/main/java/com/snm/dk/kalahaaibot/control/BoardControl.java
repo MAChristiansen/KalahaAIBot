@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -11,15 +10,18 @@ import java.util.List;
 
 public class BoardControl {
 
+    private final String TAG = "BoardControl";
+
     public static final int ROW_LENGTH = 12;
     public static final int BALLS_PER_AMBO = 6;
 
-    private final String TAG = "BoardControl";
+    public BoardControl() {}
 
-    public BoardControl() {
-
-    }
-
+    /**
+     * Generate a the starting board.
+     * @param board
+     * @return A initial board.
+     */
     public Board initBoard(Board board) {
         for (int i = 0; i < ROW_LENGTH; i++) {
             board.getAmboScores().add(BALLS_PER_AMBO);
