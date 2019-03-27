@@ -1,5 +1,7 @@
 package com.snm.dk.kalahaaibot.control;
 
+import android.util.Log;
+
 import com.snm.dk.kalahaaibot.model.Board;
 import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
@@ -12,6 +14,7 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 
 public class AIControl {
 
+    private final String TAG = "AIControl";
     private final Integer depth = 8;
 
     /**
@@ -40,13 +43,74 @@ public class AIControl {
         buildTree(tree.getRoot());
 
         //Find the heuristic values for all the nodes in the tree.
-        findHeuristic(tree.getRoot());
+        //findHeuristic(tree.getRoot());
 
         //Find the index to the optimal child.
+
+        int rootValue = minimax(tree.getRoot(), depth - 1, true);
+
+        Log.i(TAG, "Root value: " + rootValue);
+
+
+/*        for (Node child : tree.getRoot().getChildren()) {
+            Log.i(TAG, "My heuristic value is: " + child.getState().getHeuristic());
+        }*/
+
         int optimal = getAIControl().getOptimalMove(tree);
 
         // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
+    }
+
+    public int minimax(Node node, int depth, boolean maximizingPlayer) {
+
+        if (depth == 0) {
+            return node.getState().getHeuristic();
+        }
+
+        if (maximizingPlayer) {
+            int bestValue = -1500;
+
+            for (Node child : node.getChildren()) {
+                //Hvordan finder vi den næste spiller?
+                bestValue = maxMove(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
+            }
+
+            if (depth > 4) {
+                Log.i(TAG, "I found this best MAX value: " + bestValue);
+                Log.i(TAG, "Depth: " + depth);
+            }
+
+            return bestValue;
+        }
+        else {
+            int bestValue = 1500;
+
+            for (Node child : node.getChildren()) {
+                //Hvordan finder vi den næste spiller?
+                bestValue = minMove(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
+            }
+            if (depth > 4) {
+                Log.i(TAG, "I found this best MIN value: " + bestValue);
+                Log.i(TAG, "Depth: " + depth);
+            }
+            return bestValue;
+        }
+    }
+
+    private int maxMove(int value, int minimaxValue) {
+
+        if (minimaxValue > value) {
+            return minimaxValue;
+        }
+        return value;
+    }
+
+    private int minMove(int value, int minimaxValue) {
+        if (minimaxValue < value) {
+            return minimaxValue;
+        }
+        return value;
     }
 
     /**
@@ -123,6 +187,8 @@ public class AIControl {
         }
         else {
             //We found the leaf, and now build the children to the node.
+            //Log.i(TAG, "buildStatesToLeafs: " + node.getState().getUtility());
+            node.getState().setHeuristic(node.getState().getUtility());
             node.addChild(calculateStates(node));
         }
     }
