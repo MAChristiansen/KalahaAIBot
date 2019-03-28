@@ -64,41 +64,6 @@ public class AIControl {
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
     }
 
-    public int minimax(Node node, int depth, boolean maximizingPlayer) {
-
-        if (depth == 0 || checkGoalState(node)) {
-            return node.getState().getHeuristic();
-        }
-
-        if (maximizingPlayer) {
-            int bestValue = (int) Double.NEGATIVE_INFINITY;
-
-            for (Node child : node.getChildren()) {
-                //Hvordan finder vi den næste spiller?
-                bestValue = Math.max(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
-            }
-
-            if (depth > 4) {
-                //Log.i(TAG, "Depth: " + depth + ". I found this best MAX value: " + bestValue);
-            }
-
-            return bestValue;
-        }
-        else {
-            int bestValue = (int) Double.POSITIVE_INFINITY;
-
-            for (Node child : node.getChildren()) {
-                //Hvordan finder vi den næste spiller?
-                bestValue = Math.min(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
-            }
-            if (depth > 4) {
-                //Log.i(TAG, "Depth: " + depth + ". I found this best MIN value: " + bestValue);
-            }
-            return bestValue;
-        }
-    }
-
-
     public int miniMaxAB(Node node, int depth, int alpha, int beta, boolean maximizingPlayer) {
 
         if (depth == 0 || checkGoalState(node)) {
@@ -148,57 +113,6 @@ public class AIControl {
                 Log.i(TAG, "Depth: " + depth + ". I found this best MIN value: " + bestValue);
             }
             return bestValue;
-        }
-    }
-
-    /**
-     * Goes to the leafs, and calculate the heuristic values - recursive.
-     * @param node
-     */
-    private void findHeuristic(Node node) {
-        if (!(node.getChildren().isEmpty())) {
-            for (Node n : node.getChildren()) {
-                findHeuristic(n);
-            }
-        }
-        else {
-            //We found a leaf! - now starts the calculation.
-            node.getState().setHeuristic(node.getState().getUtility());
-            calculateHeuristic(node);
-        }
-    }
-
-    /**
-     * Method use in "findHeuristic()". Calculate the heuristic value for all the nodes.
-     * @param node
-     */
-    private void calculateHeuristic(Node node) {
-
-        //Are we in the top layer?
-        if (node.getParent().getParent() != null) {
-
-            //generate parent from node
-            Node parent = node.getParent();
-
-            // checks if the node is a goal state - if so, we set the heuristic value to 1000,
-            // or if the node is a losing state, we set we set the heuristic value to 1000.
-            checkGoalState(node);
-
-            // if the parent is a Human-player node, calculate the heuristic value.
-            if (parent.getState().isPlayer()) {
-                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) < parent.getState().getHeuristic()) {
-                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
-                }
-            }
-            // if the parent is a AI-player node, calculate the heuristic value.
-            else {
-                if (parent.getState().getHeuristic() == null || (node.getState().getHeuristic() + parent.getState().getUtility()) > parent.getState().getHeuristic()) {
-                    parent.getState().setHeuristic(node.getState().getHeuristic() + parent.getState().getUtility());
-                }
-            }
-
-            //start the recursive algo to the root.
-            calculateHeuristic(node.getParent());
         }
     }
 
