@@ -47,16 +47,18 @@ public class AIControl {
 
         //Find the index to the optimal child.
 
-        int rootValue = minimax(tree.getRoot(), depth - 1, true);
+        int rootValue = miniMaxAB(tree.getRoot(), depth - 1, (int) Double.NEGATIVE_INFINITY,(int) Double.POSITIVE_INFINITY, tree.getRoot().getState().isPlayer());
+        tree.getRoot().getState().setHeuristic(rootValue);
 
-        Log.i(TAG, "Root value: " + rootValue);
-
+        //Log.i(TAG, "ROOTNODE VALUE: " +rootValue);
 
 /*        for (Node child : tree.getRoot().getChildren()) {
             Log.i(TAG, "My heuristic value is: " + child.getState().getHeuristic());
         }*/
 
-        int optimal = getAIControl().getOptimalMove(tree);
+        int optimal = getAIControl().getOptimalNode(tree);
+
+        //Log.i(TAG, "OPTIMAL INDEX: " + optimal);
 
         // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
@@ -64,53 +66,89 @@ public class AIControl {
 
     public int minimax(Node node, int depth, boolean maximizingPlayer) {
 
-        if (depth == 0) {
+        if (depth == 0 || checkGoalState(node)) {
             return node.getState().getHeuristic();
         }
 
         if (maximizingPlayer) {
-            int bestValue = -1500;
+            int bestValue = (int) Double.NEGATIVE_INFINITY;
 
             for (Node child : node.getChildren()) {
                 //Hvordan finder vi den næste spiller?
-                bestValue = maxMove(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
+                bestValue = Math.max(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
             }
 
             if (depth > 4) {
-                Log.i(TAG, "I found this best MAX value: " + bestValue);
-                Log.i(TAG, "Depth: " + depth);
+                //Log.i(TAG, "Depth: " + depth + ". I found this best MAX value: " + bestValue);
             }
 
             return bestValue;
         }
         else {
-            int bestValue = 1500;
+            int bestValue = (int) Double.POSITIVE_INFINITY;
 
             for (Node child : node.getChildren()) {
                 //Hvordan finder vi den næste spiller?
-                bestValue = minMove(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
+                bestValue = Math.min(bestValue, minimax(child, depth - 1, child.getState().isPlayer()));
             }
             if (depth > 4) {
-                Log.i(TAG, "I found this best MIN value: " + bestValue);
-                Log.i(TAG, "Depth: " + depth);
+                //Log.i(TAG, "Depth: " + depth + ". I found this best MIN value: " + bestValue);
             }
             return bestValue;
         }
     }
 
-    private int maxMove(int value, int minimaxValue) {
 
-        if (minimaxValue > value) {
-            return minimaxValue;
-        }
-        return value;
-    }
+    public int miniMaxAB(Node node, int depth, int alpha, int beta, boolean maximizingPlayer) {
 
-    private int minMove(int value, int minimaxValue) {
-        if (minimaxValue < value) {
-            return minimaxValue;
+        if (depth == 0 || checkGoalState(node)) {
+            return node.getState().getHeuristic();
         }
-        return value;
+
+        if (maximizingPlayer) {
+            int bestValue = (int) Double.NEGATIVE_INFINITY;
+
+            for (Node child : node.getChildren()) {
+                //Hvordan finder vi den næste spiller?
+                bestValue = Math.max(bestValue, miniMaxAB(child, depth - 1, alpha, beta, child.getState().isPlayer()));
+
+                alpha = Math.max(alpha, bestValue);
+                if (alpha >= beta) {
+                    break;
+                }
+
+                if (child.getParent().getParent() == null) {
+                    child.getState().setHeuristic(bestValue);
+                }
+            }
+
+            if (depth > 4) {
+                Log.i(TAG, "Depth: " + depth + ". I found this best MAX value: " + bestValue);
+            }
+
+            return bestValue;
+        }
+        else {
+            int bestValue = (int) Double.POSITIVE_INFINITY;
+
+            for (Node child : node.getChildren()) {
+                //Hvordan finder vi den næste spiller?
+                bestValue = Math.min(bestValue, miniMaxAB(child, depth - 1, alpha, beta, child.getState().isPlayer()));
+
+                beta = Math.min(beta, bestValue);
+                if (alpha >= beta) {
+                    break;
+                }
+
+                if (child.getParent().getParent() == null) {
+                    child.getState().setHeuristic(bestValue);
+                }
+            }
+            if (depth > 4) {
+                Log.i(TAG, "Depth: " + depth + ". I found this best MIN value: " + bestValue);
+            }
+            return bestValue;
+        }
     }
 
     /**
@@ -193,6 +231,30 @@ public class AIControl {
         }
     }
 
+    private int getOptimalNode(Tree tree) {
+
+        List<Integer> sameHeuristic = new ArrayList<>();
+
+        Log.i(TAG, "Parent value: " + tree.getRoot().getState().getHeuristic());
+
+        for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
+            Log.i(TAG, "Heuristic values child " + i + " : " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
+        }
+
+
+        for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
+
+            if ((tree.getRoot().getChildren().get(i).getState().getHeuristic()) == (tree.getRoot().getState().getHeuristic())) {
+                Log.i(TAG, "The heuristic value we choose: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
+                sameHeuristic.add(i);
+            }
+        }
+
+        Log.i(TAG, "I values: " + sameHeuristic.toString());
+
+        return sameHeuristic.get((randomWithRange(0, sameHeuristic.size())));
+    }
+
     /**
      * Takes a tree and return a integer that represent the index for the optimal child from the root node.
      * @param tree - the tree you want to find the best move from.
@@ -252,30 +314,42 @@ public class AIControl {
      * Checks the node for a Goal state. If the node is a Goal state we set the heuristic value of the node.
      * @param node
      */
-    private void checkGoalState(Node node) {
+    private boolean checkGoalState(Node node) {
 
         // If the game is done, hence one of the rows are empty, and the AI got more stones than the Human player
         if (getGameControl().isGameDone(node.getState().getBoard().getAmboScores()) && node.getState().getBoard().getPitScores().get(1)
                 > node.getState().getBoard().getPitScores().get(0)) {
-            node.getState().setHeuristic(-1000);
+            node.getState().setHeuristic(-100);
+            return true;
 
         // If the game is done, hence one of the rows are empty, and the AI got more stones than the Human player
         } else if (getGameControl().isGameDone(node.getState().getBoard().getAmboScores()) && node.getState().getBoard().getPitScores().get(1)
                 < node.getState().getBoard().getPitScores().get(0)) {
-            node.getState().setHeuristic(1000);
+            node.getState().setHeuristic(100);
+            return true;
         }
 
         // If the difference between the pit (when the AI is in the lead) is bigger than the amount of stones left in play
         // set the heuristic-value to -1000.
         else if ((node.getState().getBoard().getPitScores().get(1) - node.getState().getBoard().getPitScores().get(0))
                 > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
-            node.getState().setHeuristic(-1000);
+            node.getState().setHeuristic(-100);
+            return true;
         }
         // If the difference between the pit (when the human player is in the lead) is bigger than the amount of stones left in play
         // set the heuristic-value to -1000.
         else  if ((node.getState().getBoard().getPitScores().get(0) - node.getState().getBoard().getPitScores().get(1))
                 > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
-            node.getState().setHeuristic(1000);
+            node.getState().setHeuristic(100);
+            return true;
         }
+
+        return false;
+    }
+
+    private int randomWithRange(int min, int max) {
+        int range = Math.abs(max-min);
+
+        return (int) (Math.random() * range) + min;
     }
 }
