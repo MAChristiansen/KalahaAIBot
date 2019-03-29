@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
@@ -11,11 +10,6 @@ public class Board {
     public Board(List<Integer> amboScores, List<Integer> pitScores) {
         this.amboScores = amboScores;
         this.pitScores = pitScores;
-    }
-
-    public Board() {
-        this.amboScores = new ArrayList<>();
-        this.pitScores = new ArrayList<>();
     }
 
     public Board(Board board) {

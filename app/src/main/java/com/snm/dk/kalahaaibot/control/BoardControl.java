@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.model.Board;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BoardControl {
@@ -16,18 +17,20 @@ public class BoardControl {
 
     /**
      * Generate a the starting board.
-     * @param board
-     * @return A initial board.
+     * @return
      */
-    public Board initBoard(Board board) {
+    public Board initBoard() {
+        List<Integer> amboScores = new ArrayList<>();
+        List<Integer> pitScores = new ArrayList<>();
+
         for (int i = 0; i < ROW_LENGTH; i++) {
-            board.getAmboScores().add(BALLS_PER_AMBO);
+            amboScores.add(BALLS_PER_AMBO);
         }
 
-        board.getPitScores().add(0);
-        board.getPitScores().add(0);
+        pitScores.add(0);
+        pitScores.add(0);
 
-        return new Board(board.getAmboScores(), board.getPitScores());
+        return new Board(amboScores, pitScores);
     }
 
     /**
@@ -56,6 +59,7 @@ public class BoardControl {
      * @return - return a boolean to represent the next player.
      */
     public boolean moveAMBO(int playerPick, boolean iteration, int AMBO, boolean player, Board board) {
+
         int i = 0;
         int tempAMBO;
         int iterationInt = 0;
@@ -137,22 +141,6 @@ public class BoardControl {
 
         //Change player
         if (player) {return  false;} else {return true;}
-    }
-
-    /**
-     * A help method for counting all the stones on the board.
-     * @param board
-     * @return
-     */
-    public int getCount(Board board) {
-        int count = 0;
-        for (int i : board.getAmboScores()) {
-            count += i;
-
-        }
-            count += board.getPitScores().get(0);
-            count += board.getPitScores().get(1);
-            return count;
     }
 
 }

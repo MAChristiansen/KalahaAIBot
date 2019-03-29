@@ -5,19 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.snm.dk.kalahaaibot.R;
-import com.snm.dk.kalahaaibot.control.ControlReg;
-import com.snm.dk.kalahaaibot.model.Node;
-import com.snm.dk.kalahaaibot.model.State;
-import com.snm.dk.kalahaaibot.model.Tree;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.snm.dk.kalahaaibot.control.ControlReg.*;
+import static com.snm.dk.kalahaaibot.control.GameControl.winningState;
 
 public class ActivityMainPage extends AppCompatActivity implements View.OnClickListener {
 
@@ -67,15 +63,20 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
                 if (getGameControl().getGameBoard().getAmboScores().get(i) == 0) {
                     return;
                 }
-               getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
+               getGameControl().takeTurn(i, this.buttons, this.textViews);
             }
         }
 
         if (v == btnRestart) {
+            for (Button b : this.buttons) {
+                b.setClickable(true);
+            }
+            winningState = false;
             Log.i("restart", "Restart clicked!");
             setGameControl(null);
             getAIControl().setTree(null);
             getGameControl().updateBoard(this.buttons, this.textViews);
         }
+
     }
 }

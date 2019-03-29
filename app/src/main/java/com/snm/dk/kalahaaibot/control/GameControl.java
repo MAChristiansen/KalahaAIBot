@@ -1,6 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,47 +14,88 @@ public class GameControl {
 
     private boolean player;
     private Board gameBoard;
+    public static boolean winningState = false;
 
     public GameControl() {
         // Init currentBoard
-        this.gameBoard = new Board();
-        getBoardControl().initBoard(this.gameBoard);
-
+        this.gameBoard = getBoardControl().initBoard();
         this.player = true;
     }
 
-    public GameControl takeTurn(int playerPick) {
-        // Player1
-        if (this.player && playerPick > 5) {
-            this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
+    public GameControl takeTurn(int playerPick, List<Button> buttons, List<TextView> textViews) {
+        if (!winningState) {
+            // Player1
+            if (this.player && playerPick > 5) {
+                if (!winningState) {
+                    this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
+                }
+            }
+            // Player2
+            else if (!this.player && playerPick <= 5) {
+                if (!winningState) {
+                    this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
+                }
+            }
+            updateBoard(buttons, textViews);
         }
-        // Player2
-        else if (!this.player && playerPick <= 5) {
-            this.player = getBoardControl().moveAMBO(playerPick, false, 0, this.player, this.gameBoard);
-        }
+        winningState(buttons, textViews);
         return this;
+    }
+
+    private void winningState(List<Button> buttons, List<TextView> textViews) {
+
+        if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree()) || getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
+            if (getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
+                Log.i("Winner", "winningState: " + " Player should win");
+                textViews.get(2).setText("You Won over the AI!");
+                winningState = true;
+            } else if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree())) {
+                Log.i("Winner", "winningState: " + " AI should win");
+                textViews.get(2).setText("The AI beat you!");
+                winningState = true;
+            }
+        }
+
+        int player1Board = 0;
+        int player2Board = 0;
+
+        for (int i = 0; i < this.gameBoard.getAmboScores().size(); i++) {
+            if (this.gameBoard.getAmboScores().get(i) == 0 && i > 5) {
+                player1Board++;
+            } else if (this.gameBoard.getAmboScores().get(i) == 0 && i <= 5) {
+                player2Board++;
+            }
+        }
+
+        if (player1Board == 6 || player2Board == 6) {
+            this.winningState = true;
+
+            if (this.gameBoard.getPitScores().get(0) > this.gameBoard.getPitScores().get(1)) {
+                textViews.get(2).setText("You Won over the AI!");
+            } else {
+                textViews.get(2).setText("The AI beat you!");
+            }
+        }
+
+        if (this.winningState) {
+            Log.i("Winner", "winningState: NÅET");
+            for (Button b : buttons) {
+                b.setClickable(false);
+            }
+        }
+
+        this.winningState = false;
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         getBoardControl().updateBoard(buttons, textViews, this.gameBoard);
 
-        if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree()) || getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
-            if (getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
-                // TODO Skriv det i UI
-                textViews.get(2).setText("You Won over the AI!");
-                //Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
-            } else if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree())) {
-                // TODO Skriv det i UI
-                textViews.get(2).setText("The AI beat you!");
-                //Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
-            }
-        }
-        else if (this.player) {
+        if (this.player) {
             textViews.get(2).setText("It´s your turn");
         }
         else {
             textViews.get(2).setText("The AI is thinking...");
-            takeTurn(getAIControl().takeAITurn());
+            takeTurn(getAIControl().takeAITurn(), buttons, textViews);
             updateBoard(buttons, textViews);
         }
     }
@@ -92,21 +132,7 @@ public class GameControl {
         return false;
     }
 
-    private boolean whoWon(List<Integer> pits) {
-
-        if (pits.get(0) > pits.get(1)) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean getCurrentPlayer() {
-        return player;
-    }
     public Board getGameBoard() {
         return gameBoard;
-    }
-    public void setGameBoard(Board gameBoard) {
-        this.gameBoard = gameBoard;
     }
 }

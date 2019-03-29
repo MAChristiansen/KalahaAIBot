@@ -1,7 +1,5 @@
 package com.snm.dk.kalahaaibot.control;
 
-import android.util.Log;
-
 import com.snm.dk.kalahaaibot.model.Board;
 import com.snm.dk.kalahaaibot.model.Node;
 import com.snm.dk.kalahaaibot.model.State;
@@ -52,6 +50,10 @@ public class AIControl {
         //Find the index to the optimal child.
         int optimal = getAIControl().getOptimalNode(tree);
 
+        if (tree.getRoot().getChildren().size() == 0 && optimal == 0) {
+            return 0;
+        }
+
         // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
     }
@@ -67,9 +69,11 @@ public class AIControl {
      */
     public int miniMaxAB(Node node, int depth, int alpha, int beta, boolean maximizingPlayer) {
 
+
         if (depth == 0 || checkGoalState(node)) {
             return node.getState().getHeuristic();
         }
+
 
         if (maximizingPlayer) {
             int bestValue = (int) Double.NEGATIVE_INFINITY;
@@ -77,11 +81,12 @@ public class AIControl {
             for (Node child : node.getChildren()) {
                 bestValue = Math.max(bestValue, miniMaxAB(child, depth - 1, alpha, beta, child.getState().isPlayer()));
 
-                //beta cutting
+                //beta cuttina
                 alpha = Math.max(alpha, bestValue);
                 if (alpha >= beta) {
                     break;
                 }
+
 
                 //Sets the heuristic value to the children to the root. Later we cant evaluate which move is the best.
                 if (child.getParent().getParent() == null) {
@@ -165,27 +170,20 @@ public class AIControl {
 
         List<Integer> sameHeuristic = new ArrayList<>();
 
-        Log.i(TAG, "Parent value: " + tree.getRoot().getState().getHeuristic());
-
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
-            Log.i(TAG, "Heuristic values child " + i + " : " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
-        }
-
-        for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
+            if (tree.getRoot().getChildren().get(i).getState().getHeuristic() == null) {
+                tree.getRoot().getChildren().get(i).getState().setHeuristic(tree.getRoot().getChildren().get(i).getState().getUtility());
+            }
             if ((tree.getRoot().getChildren().get(i).getState().getHeuristic()) == (tree.getRoot().getState().getHeuristic())) {
-                Log.i(TAG, "The heuristic value we choose: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
                 sameHeuristic.add(i);
             }
         }
 
-        Log.i(TAG, "I values: " + sameHeuristic.toString());
-
-        //UNDGÅ CRASH!!!
         if (sameHeuristic.size() < 1) {
-            return 999;
+            return 0;
         }
 
-        //If we have several of the same heuristic values, we choose one of the optimal, by random.
+        //If we have several of the same heuristic values, we choose one of the optimal, by chance
         return sameHeuristic.get((randomWithRange(0, sameHeuristic.size())));
     }
 
@@ -296,7 +294,6 @@ public class AIControl {
             node.getState().setHeuristic(100);
             return true;
         }
-
         return false;
     }
 
@@ -313,7 +310,7 @@ public class AIControl {
     }
 
     public Tree getTree() {
-        return tree;
+        return this.tree;
     }
 
     public void setTree(Tree tree) {
