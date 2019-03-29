@@ -23,7 +23,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
 
     private List<Button> buttons;
     private List<TextView> textViews;
-    private FrameLayout layer, fragmentContainer;
+    private Button btnRestart;
 
     private final int[] BUTTON_IDS = {R.id.btnP2_1, R.id.btnP2_2, R.id.btnP2_3, R.id.btnP2_4, R.id.btnP2_5, R.id.btnP2_6,
             R.id.btnP1_1, R.id.btnP1_2, R.id.btnP1_3, R.id.btnP1_4, R.id.btnP1_5, R.id.btnP1_6};
@@ -35,8 +35,8 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-        layer = findViewById(R.id.layer);
-        fragmentContainer = findViewById(R.id.fragmentContainer);
+        btnRestart = findViewById(R.id.btnRestart);
+        btnRestart.setOnClickListener(this);
 
         int k = 0;
         // Building Button Array
@@ -64,8 +64,17 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         for (int i = 0; i < this.buttons.size(); i++) {
             if (this.buttons.get(i) == v) {
+                if (getGameControl().getGameBoard().getAmboScores().get(i) == 0) {
+                    return;
+                }
                getGameControl().takeTurn(i).updateBoard(this.buttons, this.textViews);
             }
+        }
+
+        if (v == btnRestart) {
+            Log.i("restart", "Restart clicked!");
+            setGameControl(null);
+            getGameControl().updateBoard(this.buttons, this.textViews);
         }
     }
 }

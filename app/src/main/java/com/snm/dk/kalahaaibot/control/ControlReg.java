@@ -21,4 +21,7 @@ public class ControlReg {
         return AIControl;
     }
 
+    public static void setGameControl(GameControl gameControl) {
+        ControlReg.gameControl = gameControl;
+    }
 }
