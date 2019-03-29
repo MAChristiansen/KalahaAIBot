@@ -1,5 +1,7 @@
 package com.snm.dk.kalahaaibot.control;
 
+import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -40,18 +42,20 @@ public class GameControl {
         if (isGameDone(this.gameBoard.getAmboScores())) {
             if (whoWon(this.gameBoard.getPitScores())) {
                 // TODO Skriv det i UI
+                textViews.get(2).setText("You Won over the AI!");
                 //Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
             } else {
                 // TODO Skriv det i UI
+                textViews.get(2).setText("The AI beat you!");
                 //Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
             }
 
         }
-        if (this.player) {
-            textViews.get(2).setText("Player 1 turn: Total " + getBoardControl().getCount(this.gameBoard));
+        else if (this.player) {
+            textViews.get(2).setText("It´s your turn");
         }
         else {
-            textViews.get(2).setText("Player 2 turn: Total " + getBoardControl().getCount(this.gameBoard));
+            textViews.get(2).setText("The AI is thinking...");
             takeTurn(getAIControl().takeAITurn());
             updateBoard(buttons, textViews);
         }
@@ -82,8 +86,6 @@ public class GameControl {
         for (int i = 0; i < (board.size() / 2); i++) {
             player2AmboScore += board.get(i);
         }
-
-        //Log.i(TAG, "isGameDone: player1Score: " + player1AmboScore + " Player2Score: " + player2AmboScore);
 
         if (player1AmboScore == 0 || player2AmboScore == 0 ) {
             return true;

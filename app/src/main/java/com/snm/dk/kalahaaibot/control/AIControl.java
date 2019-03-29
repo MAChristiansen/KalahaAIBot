@@ -42,28 +42,28 @@ public class AIControl {
         //Building the tree based on the suggested depth.
         buildTree(tree.getRoot());
 
+        //Set heuristic values to the leafs
+        setHeuristicToLeafs(tree.getRoot());
+
         //Find the heuristic values for all the nodes in the tree.
-        //findHeuristic(tree.getRoot());
+        tree.getRoot().getState().setHeuristic(miniMaxAB(tree.getRoot(), depth , (int) Double.NEGATIVE_INFINITY,(int) Double.POSITIVE_INFINITY, tree.getRoot().getState().isPlayer()));
 
         //Find the index to the optimal child.
-
-        int rootValue = miniMaxAB(tree.getRoot(), depth - 1, (int) Double.NEGATIVE_INFINITY,(int) Double.POSITIVE_INFINITY, tree.getRoot().getState().isPlayer());
-        tree.getRoot().getState().setHeuristic(rootValue);
-
-        //Log.i(TAG, "ROOTNODE VALUE: " +rootValue);
-
-/*        for (Node child : tree.getRoot().getChildren()) {
-            Log.i(TAG, "My heuristic value is: " + child.getState().getHeuristic());
-        }*/
-
         int optimal = getAIControl().getOptimalNode(tree);
-
-        //Log.i(TAG, "OPTIMAL INDEX: " + optimal);
 
         // Return the playerPick for the optimal AI move.
         return tree.getRoot().getChildren().get(optimal).getPlayerPick();
     }
 
+    /**
+     * The minimax algo, with alpha-beta pruning. The algo finds the optimal heuristic value.
+     * @param node
+     * @param depth
+     * @param alpha
+     * @param beta
+     * @param maximizingPlayer
+     * @return The best heuristic value. (The heuristic value for the root node)
+     */
     public int miniMaxAB(Node node, int depth, int alpha, int beta, boolean maximizingPlayer) {
 
         if (depth == 0 || checkGoalState(node)) {
@@ -74,21 +74,18 @@ public class AIControl {
             int bestValue = (int) Double.NEGATIVE_INFINITY;
 
             for (Node child : node.getChildren()) {
-                //Hvordan finder vi den næste spiller?
                 bestValue = Math.max(bestValue, miniMaxAB(child, depth - 1, alpha, beta, child.getState().isPlayer()));
 
+                //beta cutting
                 alpha = Math.max(alpha, bestValue);
                 if (alpha >= beta) {
                     break;
                 }
 
+                //Sets the heuristic value to the children to the root. Later we cant evaluate which move is the best.
                 if (child.getParent().getParent() == null) {
                     child.getState().setHeuristic(bestValue);
                 }
-            }
-
-            if (depth > 4) {
-                Log.i(TAG, "Depth: " + depth + ". I found this best MAX value: " + bestValue);
             }
 
             return bestValue;
@@ -97,21 +94,20 @@ public class AIControl {
             int bestValue = (int) Double.POSITIVE_INFINITY;
 
             for (Node child : node.getChildren()) {
-                //Hvordan finder vi den næste spiller?
                 bestValue = Math.min(bestValue, miniMaxAB(child, depth - 1, alpha, beta, child.getState().isPlayer()));
 
+                //alpha cutting
                 beta = Math.min(beta, bestValue);
                 if (alpha >= beta) {
                     break;
                 }
 
+                //Sets the heuristic value to the children to the root. Later we cant evaluate which move is the best.
                 if (child.getParent().getParent() == null) {
                     child.getState().setHeuristic(bestValue);
                 }
             }
-            if (depth > 4) {
-                Log.i(TAG, "Depth: " + depth + ". I found this best MIN value: " + bestValue);
-            }
+
             return bestValue;
         }
     }
@@ -139,15 +135,40 @@ public class AIControl {
         }
         else {
             //We found the leaf, and now build the children to the node.
-            //Log.i(TAG, "buildStatesToLeafs: " + node.getState().getUtility());
-            node.getState().setHeuristic(node.getState().getUtility());
             node.addChild(calculateStates(node));
         }
     }
 
+    /**
+     * Sets the starting heuristic values to the leaf nodes.
+     * @param node
+     */
+    private void setHeuristicToLeafs(Node node) {
+        if (!(node.getChildren().isEmpty())) {
+            for (Node n : node.getChildren()) {
+                setHeuristicToLeafs(n);
+            }
+        }
+        else {
+            //We found the leaf, and now build the children to the node.
+            node.getState().setHeuristic(node.getState().getUtility());
+        }
+    }
+
+    /**
+     * Takes a tree and return a integer that represent the index for the optimal child from the root node.
+     * @param tree
+     * @return the index of the button to press.
+     */
     private int getOptimalNode(Tree tree) {
 
         List<Integer> sameHeuristic = new ArrayList<>();
+
+        if (tree.getRoot().getState().getHeuristic() == -100) {
+            Log.i(TAG, "THE AI FUCKED YOU UP!");
+        } else if (tree.getRoot().getState().getHeuristic() == 100) {
+            Log.i(TAG, "YOU FUCKED THE AI UP!");
+        }
 
         Log.i(TAG, "Parent value: " + tree.getRoot().getState().getHeuristic());
 
@@ -157,7 +178,6 @@ public class AIControl {
 
 
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
-
             if ((tree.getRoot().getChildren().get(i).getState().getHeuristic()) == (tree.getRoot().getState().getHeuristic())) {
                 Log.i(TAG, "The heuristic value we choose: " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
                 sameHeuristic.add(i);
@@ -166,26 +186,8 @@ public class AIControl {
 
         Log.i(TAG, "I values: " + sameHeuristic.toString());
 
+        //If we have several of the same heuristic values, we choose one of the optimal, by random.
         return sameHeuristic.get((randomWithRange(0, sameHeuristic.size())));
-    }
-
-    /**
-     * Takes a tree and return a integer that represent the index for the optimal child from the root node.
-     * @param tree - the tree you want to find the best move from.
-     * @return a integer that represent the index for the optimal child from the root node.
-     */
-    private int getOptimalMove(Tree tree) {
-        int optimal = 0;
-
-        Integer optimalHueristic = 1001;
-
-        for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
-            if (tree.getRoot().getChildren().get(i).getState().getHeuristic() < optimalHueristic) {
-                optimal = i;
-                optimalHueristic = tree.getRoot().getChildren().get(i).getState().getHeuristic();
-            }
-        }
-        return optimal;
     }
 
     /**
@@ -217,7 +219,17 @@ public class AIControl {
                 for (Integer ints : node.getState().getBoard().getPitScores())
                     PITs.add(ints);
 
-                nodes.add(new Node(new State(new Board(node.getState().getBoard()), getBoardControl().moveAMBO(i,false, 0, node.getState().isPlayer(), node.getState().getBoard())), i));
+                nodes.add(new Node(
+                                new State(
+                                new Board(
+                                        node.getState().getBoard()),
+                                        getBoardControl().moveAMBO(i,
+                                        false,
+                                        0,
+                                        node.getState().isPlayer(),
+                                        node.getState().getBoard())),
+                                        i));
+
                 node.getState().setBoard(new Board(AMBOs, PITs));
             }
         }
@@ -244,14 +256,14 @@ public class AIControl {
         }
 
         // If the difference between the pit (when the AI is in the lead) is bigger than the amount of stones left in play
-        // set the heuristic-value to -1000.
+        // set the heuristic-value to -100.
         else if ((node.getState().getBoard().getPitScores().get(1) - node.getState().getBoard().getPitScores().get(0))
                 > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
             node.getState().setHeuristic(-100);
             return true;
         }
         // If the difference between the pit (when the human player is in the lead) is bigger than the amount of stones left in play
-        // set the heuristic-value to -1000.
+        // set the heuristic-value to -100.
         else  if ((node.getState().getBoard().getPitScores().get(0) - node.getState().getBoard().getPitScores().get(1))
                 > getGameControl().getSumOfStonesInAmbos(node.getState().getBoard().getAmboScores())) {
             node.getState().setHeuristic(100);
@@ -261,6 +273,12 @@ public class AIControl {
         return false;
     }
 
+    /**
+     * Calculate a random int value for our chose of optimal move.
+     * @param min
+     * @param max
+     * @return
+     */
     private int randomWithRange(int min, int max) {
         int range = Math.abs(max-min);
 
