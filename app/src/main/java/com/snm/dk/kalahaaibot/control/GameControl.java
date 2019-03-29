@@ -39,17 +39,16 @@ public class GameControl {
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
         getBoardControl().updateBoard(buttons, textViews, this.gameBoard);
 
-        if (isGameDone(this.gameBoard.getAmboScores())) {
-            if (whoWon(this.gameBoard.getPitScores())) {
+        if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree()) || getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
+            if (getAIControl().HumanWonBasedOnHeuristic(getAIControl().getTree())) {
                 // TODO Skriv det i UI
                 textViews.get(2).setText("You Won over the AI!");
                 //Log.i(TAG, "updateBoard: Game Is Won By: Player 1");
-            } else {
+            } else if (getAIControl().AIWonBasedOnHeuristic(getAIControl().getTree())) {
                 // TODO Skriv det i UI
                 textViews.get(2).setText("The AI beat you!");
                 //Log.i(TAG, "updateBoard: Game Is Won By: Player 2");
             }
-
         }
         else if (this.player) {
             textViews.get(2).setText("It´s your turn");

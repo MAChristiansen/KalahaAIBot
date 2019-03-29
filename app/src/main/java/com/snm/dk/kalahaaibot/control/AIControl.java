@@ -15,7 +15,8 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 public class AIControl {
 
     private final String TAG = "AIControl";
-    private final Integer depth = 8;
+    private final Integer depth = 5;
+    private Tree tree;
 
     /**
      * Takes a AI move based on MiniMax tree-search.
@@ -37,7 +38,7 @@ public class AIControl {
         //We always start the tree from a AI chose. Therefore the player is false = AI.
         State state = new State(board, false);
         Node root = new Node(state,0);
-        Tree tree = new Tree(root);
+        this.tree = new Tree(root);
 
         //Building the tree based on the suggested depth.
         buildTree(tree.getRoot());
@@ -46,7 +47,7 @@ public class AIControl {
         setHeuristicToLeafs(tree.getRoot());
 
         //Find the heuristic values for all the nodes in the tree.
-        tree.getRoot().getState().setHeuristic(miniMaxAB(tree.getRoot(), depth , (int) Double.NEGATIVE_INFINITY,(int) Double.POSITIVE_INFINITY, tree.getRoot().getState().isPlayer()));
+        tree.getRoot().getState().setHeuristic(miniMaxAB(tree.getRoot(), depth, (int) Double.NEGATIVE_INFINITY,(int) Double.POSITIVE_INFINITY, tree.getRoot().getState().isPlayer()));
 
         //Find the index to the optimal child.
         int optimal = getAIControl().getOptimalNode(tree);
@@ -164,18 +165,11 @@ public class AIControl {
 
         List<Integer> sameHeuristic = new ArrayList<>();
 
-        if (tree.getRoot().getState().getHeuristic() == -100) {
-            Log.i(TAG, "THE AI FUCKED YOU UP!");
-        } else if (tree.getRoot().getState().getHeuristic() == 100) {
-            Log.i(TAG, "YOU FUCKED THE AI UP!");
-        }
-
         Log.i(TAG, "Parent value: " + tree.getRoot().getState().getHeuristic());
 
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
             Log.i(TAG, "Heuristic values child " + i + " : " + tree.getRoot().getChildren().get(i).getState().getHeuristic());
         }
-
 
         for (int i = 0; i < tree.getRoot().getChildren().size(); i++) {
             if ((tree.getRoot().getChildren().get(i).getState().getHeuristic()) == (tree.getRoot().getState().getHeuristic())) {
@@ -186,9 +180,16 @@ public class AIControl {
 
         Log.i(TAG, "I values: " + sameHeuristic.toString());
 
+        //UNDGÅ CRASH!!!
+        if (sameHeuristic.size() < 1) {
+            return 999;
+        }
+
         //If we have several of the same heuristic values, we choose one of the optimal, by random.
         return sameHeuristic.get((randomWithRange(0, sameHeuristic.size())));
     }
+
+
 
     /**
      * Generate states based on a node. A help method for 'buildStatesToLeafs' that generates children to the leaf.
@@ -234,6 +235,32 @@ public class AIControl {
             }
         }
         return nodes;
+    }
+
+    public boolean AIWonBasedOnHeuristic(Tree tree) {
+
+        if (tree != null) {
+            for (Node n : tree.getRoot().getChildren()) {
+                if (n.getState().getHeuristic() != -100) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean HumanWonBasedOnHeuristic(Tree tree) {
+
+        if (tree != null) {
+            for (Node n : tree.getRoot().getChildren()) {
+                if (n.getState().getHeuristic() != 100) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -283,5 +310,13 @@ public class AIControl {
         int range = Math.abs(max-min);
 
         return (int) (Math.random() * range) + min;
+    }
+
+    public Tree getTree() {
+        return tree;
+    }
+
+    public void setTree(Tree tree) {
+        this.tree = tree;
     }
 }

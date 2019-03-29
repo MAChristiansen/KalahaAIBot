@@ -74,6 +74,7 @@ public class ActivityMainPage extends AppCompatActivity implements View.OnClickL
         if (v == btnRestart) {
             Log.i("restart", "Restart clicked!");
             setGameControl(null);
+            getAIControl().setTree(null);
             getGameControl().updateBoard(this.buttons, this.textViews);
         }
     }
