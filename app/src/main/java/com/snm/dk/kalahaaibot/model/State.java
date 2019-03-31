@@ -34,12 +34,6 @@ public class State {
     public void setHeuristic(Integer heuristic) {
         this.heuristic = heuristic;
     }
-    public void setUtility(Integer utility) {
-        this.utility = utility;
-    }
-    public void setPlayer(boolean player) {
-        this.player = player;
-    }
 
     @Override
     public String toString() {

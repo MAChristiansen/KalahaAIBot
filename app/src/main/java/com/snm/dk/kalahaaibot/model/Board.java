@@ -25,14 +25,6 @@ public class Board {
         return pitScores;
     }
 
-    // Setter
-    public void setAmboScores(List<Integer> amboScores) {
-        this.amboScores = amboScores;
-    }
-    public void setPitScores(List<Integer> pitScores) {
-        this.pitScores = pitScores;
-    }
-
     @Override
     public String toString() {
         return "\n Board AMBO: " + this.amboScores + "\n" +

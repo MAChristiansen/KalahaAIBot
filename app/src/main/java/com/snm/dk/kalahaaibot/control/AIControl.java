@@ -12,7 +12,6 @@ import static com.snm.dk.kalahaaibot.control.ControlReg.getGameControl;
 
 public class AIControl {
 
-    private final String TAG = "AIControl";
     private final Integer depth = 5;
     private Tree tree;
 
@@ -74,7 +73,6 @@ public class AIControl {
             return node.getState().getHeuristic();
         }
 
-
         if (maximizingPlayer) {
             int bestValue = (int) Double.NEGATIVE_INFINITY;
 
@@ -86,7 +84,6 @@ public class AIControl {
                 if (alpha >= beta) {
                     break;
                 }
-
 
                 //Sets the heuristic value to the children to the root. Later we cant evaluate which move is the best.
                 if (child.getParent().getParent() == null) {
@@ -236,7 +233,6 @@ public class AIControl {
     }
 
     public boolean AIWonBasedOnHeuristic(Tree tree) {
-
         if (tree != null) {
             for (Node n : tree.getRoot().getChildren()) {
                 if (n.getState().getHeuristic() != -100) {
@@ -249,7 +245,6 @@ public class AIControl {
     }
 
     public boolean HumanWonBasedOnHeuristic(Tree tree) {
-
         if (tree != null) {
             for (Node n : tree.getRoot().getChildren()) {
                 if (n.getState().getHeuristic() != 100) {
@@ -312,7 +307,6 @@ public class AIControl {
     public Tree getTree() {
         return this.tree;
     }
-
     public void setTree(Tree tree) {
         this.tree = tree;
     }
