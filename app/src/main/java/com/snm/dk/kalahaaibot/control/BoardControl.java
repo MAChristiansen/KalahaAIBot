@@ -140,7 +140,7 @@ public class BoardControl {
         }
 
         //Change player
-        if (player) {return  false;} else {return true;}
+        return !player;
     }
 
 }

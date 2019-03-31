@@ -68,7 +68,7 @@ public class GameControl {
         }
 
         if (player1Board == 6 || player2Board == 6) {
-            this.winningState = true;
+            winningState = true;
 
             if (this.gameBoard.getPitScores().get(0) > this.gameBoard.getPitScores().get(1)) {
                 textViews.get(2).setText("You Won over the AI!");
@@ -77,14 +77,14 @@ public class GameControl {
             }
         }
 
-        if (this.winningState) {
+        if (winningState) {
             Log.i("Winner", "winningState: NÅET");
             for (Button b : buttons) {
                 b.setClickable(false);
             }
         }
 
-        this.winningState = false;
+        winningState = false;
     }
 
     public void updateBoard(List<Button> buttons, List<TextView> textViews) {
@@ -126,10 +126,7 @@ public class GameControl {
             player2AmboScore += board.get(i);
         }
 
-        if (player1AmboScore == 0 || player2AmboScore == 0 ) {
-            return true;
-        }
-        return false;
+        return player1AmboScore == 0 || player2AmboScore == 0;
     }
 
     public Board getGameBoard() {
